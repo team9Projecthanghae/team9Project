@@ -58,6 +58,8 @@ public class LikeService {
                 postLike -> {
                     postLikeRepository.delete(postLike);
                     post.discountLike(postLike);
+
+
                 },
                 // 좋아요가 없을 경우 좋아요 추가
                 () -> {

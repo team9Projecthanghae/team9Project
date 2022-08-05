@@ -55,7 +55,7 @@ public class Member extends Timestamped {
     return passwordEncoder.matches(password, this.password);
   }
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
   private List<PostLike> postLikeList = new ArrayList<>();
 
   public void mappingPostLike(PostLike postLike) {

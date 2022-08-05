@@ -20,11 +20,11 @@ public class PostLike {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "FK_PostLike_Member"))
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_id"))
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_PostLike_Member"))
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "post_id"))
     private Post post;
 
     public static boolean isVotedPost(Optional<PostLike> optionalPostLike) {

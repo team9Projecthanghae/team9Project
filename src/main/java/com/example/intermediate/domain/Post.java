@@ -20,9 +20,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
+@Slf4j
 @Builder
 @Getter
 @NoArgsConstructor
@@ -59,7 +62,7 @@ public class Post extends Timestamped {
     return !this.member.equals(member);
   }
 
-  @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = EAGER, mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<PostLike> postLikeList = new ArrayList<>();
 
 
@@ -68,11 +71,14 @@ public class Post extends Timestamped {
   }
 
   public void updateLikeCount() {
+    log.info(String.valueOf(this.postLikeList.size()));
     this.likeCount = (long) this.postLikeList.size();
   }
 
   public void discountLike(PostLike postLike) {
+    log.info("no");
     this.postLikeList.remove(postLike);
+    log.info(String.valueOf(this.postLikeList.size()));
 
   }
 }

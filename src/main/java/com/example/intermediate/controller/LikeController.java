@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 @RestController
 public class LikeController {
-
-    private final UserDetailsImpl userDetails;
     private final LikeService likeService;
-
     private final PostService postService;
     private final CommentService commentService;
 //    private  final RecommentService recommentService;
