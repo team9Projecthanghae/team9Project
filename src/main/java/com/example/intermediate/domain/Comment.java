@@ -1,18 +1,18 @@
 package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.CommentRequestDto;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import com.example.intermediate.domain.Like.CommentLike;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Builder
 @Getter
@@ -26,15 +26,16 @@ public class Comment extends Timestamped {
   private Long id;
 
   @JoinColumn(name = "member_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = LAZY)
   private Member member;
 
   @JoinColumn(name = "post_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = LAZY)
   private Post post;
 
   @Column(nullable = false)
   private String content;
+
 
   public void update(CommentRequestDto commentRequestDto) {
     this.content = commentRequestDto.getContent();
@@ -43,4 +44,22 @@ public class Comment extends Timestamped {
   public boolean validateMember(Member member) {
     return !this.member.equals(member);
   }
+
+//    @OneToMany(fetch = LAZY, mappedBy = "comment", cascade = CascadeType.REMOVE)
+//    private List<CommentLike> commentLikeList = new ArrayList<>();
+//
+//
+//    public void mappingCommentLike(CommentLike commentLike) {
+//      this.commentLikeList.add(commentLike);
+//    }
+
+//  public void updateLikeCount() {
+//    this.likeCount = (long) this.commentLikeList.size();
+//  }
+//
+//  public void discountLike(CommentLike commentLike) {
+//    this.commentLikeList.remove(commentLike);
+//
+//  }
 }
+

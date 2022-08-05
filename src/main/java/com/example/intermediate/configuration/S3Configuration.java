@@ -1,6 +1,5 @@
 package com.example.intermediate.configuration;
 
-import com.amazonaws.auth.AWSSessionCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+@PropertySource("classpath:application-s3.properties")
 @Configuration
 @PropertySource("classpath:application-s3.properties")
 public class S3Configuration {
