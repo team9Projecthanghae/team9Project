@@ -87,9 +87,15 @@ public class PostService {
               .build()
       );
     }
-
+    String url;
     Optional<File> file = fileRepository.findFileByPost(post);
-    String url = file.get().getUrl();
+    if(file.isPresent()) {
+      url = file.get().getUrl();
+    } else {
+      url = "";
+    }
+
+
 
     return ResponseDto.success(
         PostResponseDto.builder()
