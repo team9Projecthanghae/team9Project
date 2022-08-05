@@ -68,14 +68,8 @@ public class Post extends Timestamped {
     this.postLikeList.add(postLike);
   }
 
-  public void updateLikeCount() {
-    log.info(String.valueOf(this.postLikeList.size()));
-  }
 
   public void discountLike(PostLike postLike) {
-    log.info("no");
     this.postLikeList.remove(postLike);
-    log.info(String.valueOf(this.postLikeList.size()));
-
   }
 }

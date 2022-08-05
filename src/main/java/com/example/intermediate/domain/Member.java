@@ -61,15 +61,15 @@ public class Member extends Timestamped {
   public void mappingPostLike(PostLike postLike) {
     this.postLikeList.add(postLike);
   }
+
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+  private List<CommentLike> commentLikeList = new ArrayList<>();
+
+  public void mappingCommentLike(CommentLike commentLike) {
+    this.commentLikeList.add(commentLike);
+  }
 //
-//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
-//  private List<CommentLike> commentLikeList = new ArrayList<>();
-//
-//  public void mappingCommentLike(CommentLike commentLike) {
-//    this.CommentLikeList.add(commentLike);
-//  }
-//
-//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+//  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
 //  private List<recommentLike> recommentLikeList = new ArrayList<>();
 //
 //  public void mappingRecommentLike(RecommentLike recommentLike) {
