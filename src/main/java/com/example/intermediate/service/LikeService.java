@@ -43,14 +43,6 @@ public class LikeService {
 
         Post post = isPresentPost(postId);
 
-        if (null == post) {
-            return ResponseDto.fail("UNAUTHORIZED_CONTACT",
-                    "본인이 작성한 글이 아닙니다.");
-        }
-        if (!Objects.equals(member.getId(), post.getMember().getId())) {
-            return ResponseDto.fail("INVALID_INFORMATION",
-                    "다시 로그인 해주십시오.");
-        }
         Optional<PostLike> ByPostAndMember = postLikeRepository.findByPostAndMember(post, member);
 
         ByPostAndMember.ifPresentOrElse(

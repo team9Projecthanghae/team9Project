@@ -22,8 +22,7 @@ public class LikeController {
 
     @PostMapping("/api/post/{id}/like")
     public ResponseDto<?> pushpostlike(@PathVariable Long id, HttpServletRequest request) {
-        likeService.pushpostlike(id, request);
-        return postService.getPost(id);
+        return likeService.pushpostlike(id, request);
     }
 
 //    @PostMapping("/api/comment/{id}/like")
