@@ -2,6 +2,7 @@ package com.example.intermediate.service;
 
 
 import com.example.intermediate.jwt.TokenProvider;
+import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.ReCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,16 @@ import org.springframework.stereotype.Service;
 public class ReCommentService {
     private final ReCommentRepository recommentRepository;
 
+    private final CommentRepository commentRepository;
+
     private final TokenProvider tokenProvider;
 
     private final PostService postService;
+
+
+
+
+
 
 
 
