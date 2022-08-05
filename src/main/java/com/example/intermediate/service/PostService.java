@@ -3,12 +3,14 @@ package com.example.intermediate.service;
 import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.domain.Comment;
+import com.example.intermediate.domain.File;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
 import com.example.intermediate.controller.request.PostRequestDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
+import com.example.intermediate.repository.FileRepository;
 import com.example.intermediate.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,8 @@ public class PostService {
   private final CommentRepository commentRepository;
 
   private final TokenProvider tokenProvider;
+
+  private final FileRepository fileRepository;
 
   @Transactional
   public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
@@ -84,6 +88,9 @@ public class PostService {
       );
     }
 
+    Optional<File> file = fileRepository.findFileByPost(post);
+    String url = file.get().getUrl();
+
     return ResponseDto.success(
         PostResponseDto.builder()
             .id(post.getId())
@@ -93,6 +100,7 @@ public class PostService {
             .author(post.getMember().getNickname())
             .createdAt(post.getCreatedAt())
             .modifiedAt(post.getModifiedAt())
+            .imageUrl(url)
             .build()
     );
   }
