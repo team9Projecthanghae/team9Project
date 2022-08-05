@@ -31,6 +31,7 @@ private final CommentLikeRepository commentLikeRepository;
 //    private final RecommentRepository recommentRepository;
 
 
+    @Transactional
     public ResponseDto<?> pushPostLike(Long postId, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {

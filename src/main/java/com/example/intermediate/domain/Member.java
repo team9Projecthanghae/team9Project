@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @Builder
 @Getter
@@ -54,15 +55,15 @@ public class Member extends Timestamped {
   public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
     return passwordEncoder.matches(password, this.password);
   }
-
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
   private List<PostLike> postLikeList = new ArrayList<>();
+
 
   public void mappingPostLike(PostLike postLike) {
     this.postLikeList.add(postLike);
   }
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
   private List<CommentLike> commentLikeList = new ArrayList<>();
 
   public void mappingCommentLike(CommentLike commentLike) {

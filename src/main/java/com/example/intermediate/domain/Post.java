@@ -1,26 +1,16 @@
 package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.PostRequestDto;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
 import com.example.intermediate.domain.Like.PostLike;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -43,7 +33,7 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String content;
 
-  @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
 
@@ -60,7 +50,7 @@ public class Post extends Timestamped {
     return !this.member.equals(member);
   }
 
-  @OneToMany(fetch = EAGER, mappedBy = "post", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<PostLike> postLikeList = new ArrayList<>();
 
 
