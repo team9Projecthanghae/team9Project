@@ -27,10 +27,6 @@ public class PostLike {
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "post_id"))
     private Post post;
 
-    public static boolean isVotedPost(Optional<PostLike> optionalPostLike) {
-        return optionalPostLike.isPresent();
-    }
-
     public void mappingMember(Member member) {
         this.member = member;
         member.mappingPostLike(this);

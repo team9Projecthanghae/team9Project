@@ -94,10 +94,14 @@ public class PostService {
       );
     }
 
-
+    String url;
     Optional<File> file = fileRepository.findFileByPost(post);
+    if(file.isPresent()) {
+      url = file.get().getUrl();
+    } else {
+      url = "";
+    }
 
-    String url = file.get().getUrl();
 
     List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
     int likeCount= postLikeList.size();
