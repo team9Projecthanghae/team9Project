@@ -46,8 +46,6 @@ public class Post extends Timestamped {
   @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
-  @Column(nullable = false)
-  private Long likeCount;
 
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = LAZY)
@@ -72,7 +70,6 @@ public class Post extends Timestamped {
 
   public void updateLikeCount() {
     log.info(String.valueOf(this.postLikeList.size()));
-    this.likeCount = (long) this.postLikeList.size();
   }
 
   public void discountLike(PostLike postLike) {

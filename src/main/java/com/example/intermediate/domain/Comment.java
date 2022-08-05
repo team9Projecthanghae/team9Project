@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,6 @@ public class Comment extends Timestamped {
   @Column(nullable = false)
   private String content;
 
-  @Column(nullable = false)
-  private Long likeCount;
 
   public void update(CommentRequestDto commentRequestDto) {
     this.content = commentRequestDto.getContent();
@@ -53,7 +52,7 @@ public class Comment extends Timestamped {
 //    public void mappingCommentLike(CommentLike commentLike) {
 //      this.commentLikeList.add(commentLike);
 //    }
-//
+
 //  public void updateLikeCount() {
 //    this.likeCount = (long) this.commentLikeList.size();
 //  }

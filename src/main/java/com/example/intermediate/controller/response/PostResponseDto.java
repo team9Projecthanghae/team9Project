@@ -20,4 +20,5 @@ public class PostResponseDto {
   private String imageUrl;
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
+  private int likeCount;
 }

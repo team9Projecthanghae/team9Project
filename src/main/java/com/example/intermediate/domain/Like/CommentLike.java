@@ -30,9 +30,7 @@ public class CommentLike {
     @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "FK_CommentLike_Member"))
     private Comment comment;
 
-    public static boolean isVotedComment(Optional<CommentLike> optionalCommentLike) {
-        return optionalCommentLike.isPresent();
-    }
+
 //
 //    public void mappingMember(Member member) {
 //        this.member = member;
