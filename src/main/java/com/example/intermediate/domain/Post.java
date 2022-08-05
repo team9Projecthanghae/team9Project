@@ -1,6 +1,8 @@
 package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.PostRequestDto;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,10 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.example.intermediate.domain.Like.PostLike;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Builder
 @Getter
@@ -34,11 +40,14 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String content;
 
-  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
+  @Column(nullable = false)
+  private Long likeCount;
+
   @JoinColumn(name = "member_id", nullable = false)
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = LAZY)
   private Member member;
 
   public void update(PostRequestDto postRequestDto) {
@@ -50,4 +59,20 @@ public class Post extends Timestamped {
     return !this.member.equals(member);
   }
 
+  @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
+  private List<PostLike> postLikeList = new ArrayList<>();
+
+
+  public void mappingPostLike(PostLike postLike) {
+    this.postLikeList.add(postLike);
+  }
+
+  public void updateLikeCount() {
+    this.likeCount = (long) this.postLikeList.size();
+  }
+
+  public void discountLike(PostLike postLike) {
+    this.postLikeList.remove(postLike);
+
+  }
 }

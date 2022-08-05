@@ -1,12 +1,14 @@
 package com.example.intermediate.domain;
 
+import com.example.intermediate.domain.Like.CommentLike;
+import com.example.intermediate.domain.Like.PostLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,4 +54,25 @@ public class Member extends Timestamped {
   public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
     return passwordEncoder.matches(password, this.password);
   }
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+  private List<PostLike> postLikeList = new ArrayList<>();
+
+  public void mappingPostLike(PostLike postLike) {
+    this.postLikeList.add(postLike);
+  }
+//
+//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+//  private List<CommentLike> commentLikeList = new ArrayList<>();
+//
+//  public void mappingCommentLike(CommentLike commentLike) {
+//    this.CommentLikeList.add(commentLike);
+//  }
+//
+//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+//  private List<recommentLike> recommentLikeList = new ArrayList<>();
+//
+//  public void mappingRecommentLike(RecommentLike recommentLike) {
+//    this.RecommentLikeList.add(recommentLike);
+//  }
 }
