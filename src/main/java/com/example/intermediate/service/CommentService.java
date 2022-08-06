@@ -1,8 +1,10 @@
 package com.example.intermediate.service;
 
+import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.domain.Comment;
+import com.example.intermediate.domain.Like.PostLike;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
 import com.example.intermediate.controller.request.CommentRequestDto;
@@ -11,6 +13,7 @@ import com.example.intermediate.repository.CommentRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletionException;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -86,6 +89,25 @@ public class CommentService {
       );
     }
     return ResponseDto.success(commentResponseDtoList);
+  }
+
+  @Transactional(readOnly = true)
+  public List<CommentResponseDto> getAllCommentsByMember(Member member) {
+    List<Comment> commentList = commentRepository.findAllByMember(member);
+    List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+
+    for(Comment comment : commentList) {
+      commentResponseDtoList.add(
+      CommentResponseDto.builder()
+              .id(comment.getId())
+              .author(comment.getMember().getNickname())
+              .content(comment.getContent())
+              .createdAt(comment.getCreatedAt())
+              .modifiedAt(comment.getModifiedAt())
+              .build()
+      );
+    }
+    return commentResponseDtoList;
   }
 
   @Transactional
@@ -174,4 +196,6 @@ public class CommentService {
     }
     return tokenProvider.getMemberFromAuthentication();
   }
+
+
 }

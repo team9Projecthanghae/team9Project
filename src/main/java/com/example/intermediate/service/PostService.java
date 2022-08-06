@@ -21,9 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.example.intermediate.repository.like.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -94,13 +95,7 @@ public class PostService {
       );
     }
 
-    String url;
-    Optional<File> file = fileRepository.findFileByPost(post);
-    if(file.isPresent()) {
-      url = file.get().getUrl();
-    } else {
-      url = "";
-    }
+    String url = getImageUrlByPost(post);
 
 
     List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
@@ -198,6 +193,44 @@ public class PostService {
       return null;
     }
     return tokenProvider.getMemberFromAuthentication();
+  }
+
+  public String getImageUrlByPost(Post post) {
+    String url;
+    Optional<File> file = fileRepository.findFileByPost(post);
+    if(file.isPresent()) {
+      url = file.get().getUrl();
+    } else {
+      url = "";
+    }
+    return url;
+  }
+
+
+
+  @Transactional(readOnly = true)
+  public List<PostResponseDto> getAllPostByMember(Member member) {
+    List<Post> postList = postRepository.findAllByMember(member);
+    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+    for(Post post : postList) {
+      String url = getImageUrlByPost(post);
+      List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
+      int likeCount= postLikeList.size();
+      postResponseDtoList.add(
+      PostResponseDto.builder()
+              .id(post.getId())
+              .title(post.getTitle())
+              .author(post.getMember().getNickname())
+              .content(post.getContent())
+              .createdAt(post.getCreatedAt())
+              .modifiedAt(post.getModifiedAt())
+              .likeCount(likeCount)
+              .imageUrl(url)
+              .build()
+      );
+    }
+    return postResponseDtoList;
   }
 
 }

@@ -2,16 +2,14 @@ package com.example.intermediate.controller;
 
 import com.example.intermediate.controller.request.LoginRequestDto;
 import com.example.intermediate.controller.request.MemberRequestDto;
+import com.example.intermediate.controller.response.MyPageReponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.service.MemberService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -39,5 +37,10 @@ public class MemberController {
   @RequestMapping(value = "/api/auth/member/logout", method = RequestMethod.POST)
   public ResponseDto<?> logout(HttpServletRequest request) {
     return memberService.logout(request);
+  }
+
+  @RequestMapping(value = "/api/auth/member/mypage", method = RequestMethod.GET)
+  public ResponseDto<?> getMyPage(HttpServletRequest request) {
+    return memberService.getMemberActivityList(request);
   }
 }
