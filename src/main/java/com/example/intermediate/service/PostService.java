@@ -5,12 +5,19 @@ import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
+import com.example.intermediate.domain.File;
+import com.example.intermediate.domain.Like.CommentLike;
+import com.example.intermediate.domain.Like.PostLike;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
+import com.example.intermediate.repository.FileRepository;
 import com.example.intermediate.repository.PostRepository;
+import com.example.intermediate.repository.like.CommentLikeRepository;
+import com.example.intermediate.repository.like.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -27,17 +35,21 @@ public class PostService {
   private final CommentRepository commentRepository;
 
   private final TokenProvider tokenProvider;
+  private final CommentLikeRepository commentLikeRepository;
+  private final FileRepository fileRepository;
+
+  private final PostLikeRepository postLikeRepository;
 
   @Transactional
   public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
     if (null == request.getHeader("Refresh-Token")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
-          "로그인이 필요합니다.");
+              "로그인이 필요합니다.");
     }
 
     if (null == request.getHeader("Authorization")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
-          "로그인이 필요합니다.");
+              "로그인이 필요합니다.");
     }
 
     Member member = validateMember(request);
@@ -46,20 +58,20 @@ public class PostService {
     }
 
     Post post = Post.builder()
-        .title(requestDto.getTitle())
-        .content(requestDto.getContent())
-        .member(member)
-        .build();
+            .title(requestDto.getTitle())
+            .content(requestDto.getContent())
+            .member(member)
+            .build();
     postRepository.save(post);
     return ResponseDto.success(
-        PostResponseDto.builder()
-            .id(post.getId())
-            .title(post.getTitle())
-            .content(post.getContent())
-            .author(post.getMember().getNickname())
-            .createdAt(post.getCreatedAt())
-            .modifiedAt(post.getModifiedAt())
-            .build()
+            PostResponseDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .author(post.getMember().getNickname())
+                    .createdAt(post.getCreatedAt())
+                    .modifiedAt(post.getModifiedAt())
+                    .build()
     );
   }
 
@@ -74,6 +86,8 @@ public class PostService {
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     for (Comment comment : commentList) {
+      List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
+      int likeCount = commentLikeList.size();
       commentResponseDtoList.add(
           CommentResponseDto.builder()
               .id(comment.getId())
@@ -83,19 +97,35 @@ public class PostService {
               .modifiedAt(comment.getModifiedAt())
               
               .build()
+              CommentResponseDto.builder()
+                      .id(comment.getId())
+                      .author(comment.getMember().getNickname())
+                      .content(comment.getContent())
+                      .createdAt(comment.getCreatedAt())
+                      .modifiedAt(comment.getModifiedAt())
+                      .likeCount(likeCount)
+                      .build()
       );
     }
 
+    String url = getImageUrlByPost(post);
+
+
+    List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
+    int likeCount= postLikeList.size();
+
     return ResponseDto.success(
-        PostResponseDto.builder()
-            .id(post.getId())
-            .title(post.getTitle())
-            .content(post.getContent())
-            .commentResponseDtoList(commentResponseDtoList)
-            .author(post.getMember().getNickname())
-            .createdAt(post.getCreatedAt())
-            .modifiedAt(post.getModifiedAt())
-            .build()
+            PostResponseDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .commentResponseDtoList(commentResponseDtoList)
+                    .author(post.getMember().getNickname())
+                    .createdAt(post.getCreatedAt())
+                    .modifiedAt(post.getModifiedAt())
+                    .imageUrl(url)
+                    .likeCount(likeCount)
+                    .build()
     );
   }
 
@@ -176,6 +206,44 @@ public class PostService {
       return null;
     }
     return tokenProvider.getMemberFromAuthentication();
+  }
+
+  public String getImageUrlByPost(Post post) {
+    String url;
+    Optional<File> file = fileRepository.findFileByPost(post);
+    if(file.isPresent()) {
+      url = file.get().getUrl();
+    } else {
+      url = "";
+    }
+    return url;
+  }
+
+
+
+  @Transactional(readOnly = true)
+  public List<PostResponseDto> getAllPostByMember(Member member) {
+    List<Post> postList = postRepository.findAllByMember(member);
+    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+    for(Post post : postList) {
+      String url = getImageUrlByPost(post);
+      List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
+      int likeCount= postLikeList.size();
+      postResponseDtoList.add(
+      PostResponseDto.builder()
+              .id(post.getId())
+              .title(post.getTitle())
+              .author(post.getMember().getNickname())
+              .content(post.getContent())
+              .createdAt(post.getCreatedAt())
+              .modifiedAt(post.getModifiedAt())
+              .likeCount(likeCount)
+              .imageUrl(url)
+              .build()
+      );
+    }
+    return postResponseDtoList;
   }
 
 }
