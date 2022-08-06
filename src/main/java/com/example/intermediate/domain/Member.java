@@ -54,7 +54,7 @@ public class Member extends Timestamped {
     return passwordEncoder.matches(password, this.password);
   }
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
   private Set<PostLike> postLikeList = new HashSet<>();
 
   @Transactional
@@ -62,7 +62,7 @@ public class Member extends Timestamped {
     this.postLikeList.add(postLike);
   }
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
   private Set<CommentLike> commentLikeList = new HashSet<>();
 
   @Transactional

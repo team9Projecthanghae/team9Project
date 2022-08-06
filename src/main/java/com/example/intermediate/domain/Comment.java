@@ -32,6 +32,9 @@ public class Comment extends Timestamped {
   @ManyToOne(fetch = LAZY)
   private Post post;
 
+//  @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//  private List<Recomment> recomments;
+
   @Column(nullable = false)
   private String content;
 
@@ -44,7 +47,7 @@ public class Comment extends Timestamped {
     return !this.member.equals(member);
   }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
 
