@@ -183,22 +183,6 @@ public class CommentService {
         }
         return tokenProvider.getMemberFromAuthentication();
     }
-    Comment comment = Comment.builder()
-        .member(member)
-        .post(post)
-        .content(requestDto.getContent())
-        .build();
-    commentRepository.save(comment);
-    return ResponseDto.success(
-        CommentResponseDto.builder()
-            .id(comment.getId())
-            .author(comment.getMember().getNickname())
-            .content(comment.getContent())
-            .createdAt(comment.getCreatedAt())
-            .modifiedAt(comment.getModifiedAt())
-            .build()
-    );
-  }
 
   @Transactional(readOnly = true)
   public List<CommentResponseDto> getAllCommentsByMember(Member member) {

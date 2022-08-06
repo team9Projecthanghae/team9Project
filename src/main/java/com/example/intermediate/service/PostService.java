@@ -4,16 +4,14 @@ import com.example.intermediate.controller.request.PostRequestDto;
 import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
-import com.example.intermediate.domain.Comment;
-import com.example.intermediate.domain.File;
+import com.example.intermediate.domain.*;
 import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
-import com.example.intermediate.domain.Member;
-import com.example.intermediate.domain.Post;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.FileRepository;
 import com.example.intermediate.repository.PostRepository;
+import com.example.intermediate.repository.ReCommentRepository;
 import com.example.intermediate.repository.like.CommentLikeRepository;
 import com.example.intermediate.repository.like.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +36,7 @@ public class PostService {
   private final CommentLikeRepository commentLikeRepository;
   private final FileRepository fileRepository;
 
+  private final ReCommentRepository recommentRepository;
   private final PostLikeRepository postLikeRepository;
 
   @Transactional
@@ -88,15 +87,9 @@ public class PostService {
     for (Comment comment : commentList) {
       List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
       int likeCount = commentLikeList.size();
+      List<ReComment> recommentList = recommentRepository.findAllByComment(comment);
+
       commentResponseDtoList.add(
-          CommentResponseDto.builder()
-              .id(comment.getId())
-              .author(comment.getMember().getNickname())
-              .content(comment.getContent())
-              .createdAt(comment.getCreatedAt())
-              .modifiedAt(comment.getModifiedAt())
-              
-              .build()
               CommentResponseDto.builder()
                       .id(comment.getId())
                       .author(comment.getMember().getNickname())
@@ -104,6 +97,7 @@ public class PostService {
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
                       .likeCount(likeCount)
+                      .recommentResponseDtoList(recommentList)
                       .build()
       );
     }
