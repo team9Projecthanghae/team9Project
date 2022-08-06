@@ -1,9 +1,7 @@
 package com.example.intermediate.service;
 
 import com.example.intermediate.S3.S3Uploader;
-import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
-import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.File;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
@@ -16,9 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

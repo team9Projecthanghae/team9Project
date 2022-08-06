@@ -4,9 +4,7 @@ import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @Builder
 @Getter
@@ -56,21 +55,23 @@ public class Member extends Timestamped {
   }
 
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
-  private List<PostLike> postLikeList = new ArrayList<>();
+  private Set<PostLike> postLikeList = new HashSet<>();
 
+  @Transactional
   public void mappingPostLike(PostLike postLike) {
     this.postLikeList.add(postLike);
   }
+
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+  private Set<CommentLike> commentLikeList = new HashSet<>();
+
+  @Transactional
+  public void mappingCommentLike(CommentLike commentLike) {
+    this.commentLikeList.add(commentLike);
+  }
 //
-//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
-//  private List<CommentLike> commentLikeList = new ArrayList<>();
-//
-//  public void mappingCommentLike(CommentLike commentLike) {
-//    this.CommentLikeList.add(commentLike);
-//  }
-//
-//  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
-//  private List<recommentLike> recommentLikeList = new ArrayList<>();
+//  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+//  private Se<recommentLike> recommentLikeList = new HashSet<>();
 //
 //  public void mappingRecommentLike(RecommentLike recommentLike) {
 //    this.RecommentLikeList.add(recommentLike);

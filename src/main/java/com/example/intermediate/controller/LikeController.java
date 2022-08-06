@@ -1,7 +1,6 @@
 package com.example.intermediate.controller;
 
 import com.example.intermediate.controller.response.ResponseDto;
-import com.example.intermediate.domain.UserDetailsImpl;
 import com.example.intermediate.service.CommentService;
 import com.example.intermediate.service.LikeService;
 import com.example.intermediate.service.PostService;
@@ -20,21 +19,19 @@ public class LikeController {
     private final CommentService commentService;
 //    private  final RecommentService recommentService;
 
-    @PostMapping("/api/post/{id}/like")
-    public ResponseDto<?> pushpostlike(@PathVariable Long id, HttpServletRequest request) {
-        return likeService.pushpostlike(id, request);
+    @PostMapping("/api/auth/post/{id}/like")
+    public ResponseDto<?> pushPostLike(@PathVariable Long id, HttpServletRequest request) {
+        return likeService.pushPostLike(id, request);
     }
 
-//    @PostMapping("/api/comment/{id}/like")
-//    public ResponseDto<?> pushcommentlike(@PathVariable Long id, UserDetailsImpl userDetails,  HttpServletRequest request) {
-//        String nickname =userDetails.getMember().getNickname();
-//        likeService.pushcommentlike(id, nickname, request);
-//        return commentService.getComment(id);
-//    }
+    @PostMapping("/api/auth/comment/{id}/like")
+    public ResponseDto<?> pushCommentLike(@PathVariable Long id, HttpServletRequest request) {
+        return likeService.pushCommentLike(id, request);
+    }
 
 //    @PostMapping("/api/recomment/{id}/like")
-//    public ResponseDto<?> pushrecommentlike(@PathVariable Long id, UserDetailsImpl userDetails) {
-//        return recommentService.getrecomment(id);
+//    public ResponseDto<?> pushrecommentlike(@PathVariable Long id, HttpServletRequest request) {
+//        return likeService.pushCRecommentLike(id, request);
 //    }
 
 }

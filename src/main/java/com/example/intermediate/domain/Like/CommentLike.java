@@ -2,12 +2,10 @@ package com.example.intermediate.domain.Like;
 
 import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Member;
-import com.example.intermediate.domain.Post;
 import lombok.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-
-import java.util.Optional;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -23,23 +21,23 @@ public class CommentLike {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "FK_CommentLike_Member"))
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name ="member_id"))
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "FK_CommentLike_Member"))
+    @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "comment_id"))
     private Comment comment;
 
+    @Transactional
+    public void mappingMember(Member member) {
+        this.member = member;
+        member.mappingCommentLike(this);
+    }
 
-//
-//    public void mappingMember(Member member) {
-//        this.member = member;
-//        member.mappingCommentLike(this);
-//    }
-//
-//    public void mappingComment(Comment comment) {
-//        this.comment = comment;
-//        comment.mappingCommentLike(this);
-//    }
+    @Transactional
+    public void mappingComment(Comment comment) {
+        this.comment = comment;
+        comment.mappingCommentLike(this);
+    }
 
 }

@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,21 +44,18 @@ public class Comment extends Timestamped {
     return !this.member.equals(member);
   }
 
-//    @OneToMany(fetch = LAZY, mappedBy = "comment", cascade = CascadeType.REMOVE)
-//    private List<CommentLike> commentLikeList = new ArrayList<>();
-//
-//
-//    public void mappingCommentLike(CommentLike commentLike) {
-//      this.commentLikeList.add(commentLike);
-//    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.REMOVE)
+    private List<CommentLike> commentLikeList = new ArrayList<>();
 
-//  public void updateLikeCount() {
-//    this.likeCount = (long) this.commentLikeList.size();
-//  }
-//
-//  public void discountLike(CommentLike commentLike) {
-//    this.commentLikeList.remove(commentLike);
-//
-//  }
+
+    public void mappingCommentLike(CommentLike commentLike) {
+      this.commentLikeList.add(commentLike);
+    }
+
+
+  public void discountLike(CommentLike commentLike) {
+    this.commentLikeList.remove(commentLike);
+
+  }
 }
 

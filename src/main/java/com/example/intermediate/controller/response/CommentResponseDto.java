@@ -16,4 +16,5 @@ public class CommentResponseDto {
   private String content;
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
+  private int likeCount;
 }

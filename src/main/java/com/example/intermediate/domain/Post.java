@@ -1,11 +1,7 @@
 package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.PostRequestDto;
-
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.*;
-
 import com.example.intermediate.domain.Like.PostLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -13,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -35,7 +34,7 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String content;
 
-  @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
 
@@ -56,7 +55,7 @@ public class Post extends Timestamped {
     return !this.member.equals(member);
   }
 
-  @OneToMany(fetch = EAGER, mappedBy = "post", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
   private List<PostLike> postLikeList = new ArrayList<>();
 
 
@@ -64,14 +63,8 @@ public class Post extends Timestamped {
     this.postLikeList.add(postLike);
   }
 
-  public void updateLikeCount() {
-    log.info(String.valueOf(this.postLikeList.size()));
-  }
 
   public void discountLike(PostLike postLike) {
-    log.info("no");
     this.postLikeList.remove(postLike);
-    log.info(String.valueOf(this.postLikeList.size()));
-
   }
 }
