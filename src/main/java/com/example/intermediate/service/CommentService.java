@@ -25,7 +25,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-
     private final CommentRepository commentRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final TokenProvider tokenProvider;
@@ -70,7 +69,7 @@ public class CommentService {
         );
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseDto<?> getAllCommentsByPost(Long postId) {
         Post post = postService.isPresentPost(postId);
         if (null == post) {
@@ -84,7 +83,6 @@ public class CommentService {
         for (Comment comment : commentList) {
             List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
             int likeCount = commentLikeList.size();
-
             commentResponseDtoList.add(
                     CommentResponseDto.builder()
                             .id(comment.getId())
@@ -193,6 +191,10 @@ public class CommentService {
     List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     for(Comment comment : commentList) {
+        List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
+        int likeCount = commentLikeList.size();
+        log.info(String.valueOf(likeCount));
+        log.info("d");
       commentResponseDtoList.add(
       CommentResponseDto.builder()
               .id(comment.getId())
@@ -200,6 +202,7 @@ public class CommentService {
               .content(comment.getContent())
               .createdAt(comment.getCreatedAt())
               .modifiedAt(comment.getModifiedAt())
+              .likeCount(likeCount)
               .build()
       );
     }

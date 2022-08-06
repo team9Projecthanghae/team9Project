@@ -2,13 +2,10 @@ package com.example.intermediate.service;
 
 import com.example.intermediate.controller.response.*;
 import com.example.intermediate.domain.Member;
-import com.example.intermediate.domain.Post;
-import com.example.intermediate.domain.RefreshToken;
 import com.example.intermediate.controller.request.LoginRequestDto;
 import com.example.intermediate.controller.request.MemberRequestDto;
 import com.example.intermediate.controller.request.TokenDto;
 import com.example.intermediate.jwt.TokenProvider;
-import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.MemberRepository;
 
 import java.util.List;
@@ -16,12 +13,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.intermediate.repository.PostRepository;
-import com.example.intermediate.repository.like.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

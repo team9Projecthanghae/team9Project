@@ -1,7 +1,6 @@
 package com.example.intermediate.controller;
 
 import com.example.intermediate.controller.response.ResponseDto;
-import com.example.intermediate.domain.UserDetailsImpl;
 import com.example.intermediate.service.CommentService;
 import com.example.intermediate.service.LikeService;
 import com.example.intermediate.service.PostService;

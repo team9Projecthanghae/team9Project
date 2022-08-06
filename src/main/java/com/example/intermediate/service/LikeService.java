@@ -1,7 +1,5 @@
 package com.example.intermediate.service;
 
-import com.example.intermediate.controller.response.CommentResponseDto;
-import com.example.intermediate.controller.response.PostLikeReponseDto;
 import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,7 +28,7 @@ public class LikeService {
     private final PostRepository postRepository;
     private final TokenProvider tokenProvider;
     private final PostLikeRepository postLikeRepository;
-private final CommentLikeRepository commentLikeRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
 
 //    private final RecommentRepository recommentRepository;
@@ -95,16 +92,8 @@ private final CommentLikeRepository commentLikeRepository;
         return optionalPost.orElse(null);
     }
 
+
     @Transactional
-    public ResponseDto<?>pushCommentLike (Long id, HttpServletRequest request){
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail("MEMBER_NOT_FOUND",
-                    "로그인이 필요합니다.");
-        }
     public List<PostResponseDto> getAllPostLikesByMember(Member member){
        List<PostLike> postLikeList = postLikeRepository.findPostLikesByMember(member);
        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
@@ -128,6 +117,17 @@ private final CommentLikeRepository commentLikeRepository;
         return postResponseDtoList;
     }
 
+
+    @Transactional
+    public ResponseDto<?>pushCommentLike (Long id, HttpServletRequest request) {
+        if (null == request.getHeader("Refresh-Token")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
 
         Member member = validateMember(request);
 
