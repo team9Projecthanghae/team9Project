@@ -1,6 +1,10 @@
 package com.example.intermediate.service;
 
+import com.example.intermediate.controller.response.CommentResponseDto;
+import com.example.intermediate.controller.response.PostLikeReponseDto;
+import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
+import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Like.PostLike;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
@@ -12,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,6 +28,8 @@ public class LikeService {
     private final PostRepository postRepository;
     private final TokenProvider tokenProvider;
     private final PostLikeRepository postLikeRepository;
+
+    private final PostService postService;
 
 
     public ResponseDto<?> pushpostlike(Long postId, HttpServletRequest request) {
@@ -78,6 +86,30 @@ public class LikeService {
     public Post isPresentPost(Long id) {
         Optional<Post> optionalPost = postRepository.findById(id);
         return optionalPost.orElse(null);
+    }
+
+    @Transactional
+    public List<PostResponseDto> getAllPostLikesByMember(Member member){
+       List<PostLike> postLikeList = postLikeRepository.findPostLikesByMember(member);
+       List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for(PostLike postLike : postLikeList) {
+            String url = postService.getImageUrlByPost(postLike.getPost());
+            List<PostLike> postLikeListByPost = postLikeRepository.findAllByPost(postLike.getPost());
+            int likeCount= postLikeListByPost.size();
+            postResponseDtoList.add(
+                    PostResponseDto.builder()
+                            .title(postLike.getPost().getTitle())
+                            .author(postLike.getPost().getMember().getNickname())
+                            .modifiedAt(postLike.getPost().getModifiedAt())
+                            .createdAt(postLike.getPost().getCreatedAt())
+                            .content(postLike.getPost().getContent())
+                            .id(postLike.getPost().getId())
+                            .imageUrl(url)
+                            .likeCount(likeCount)
+                            .build()
+            );
+        }
+        return postResponseDtoList;
     }
 
 

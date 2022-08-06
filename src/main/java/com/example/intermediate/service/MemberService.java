@@ -1,17 +1,23 @@
 package com.example.intermediate.service;
 
-import com.example.intermediate.controller.response.MemberResponseDto;
+import com.example.intermediate.controller.response.*;
 import com.example.intermediate.domain.Member;
+import com.example.intermediate.domain.Post;
 import com.example.intermediate.domain.RefreshToken;
 import com.example.intermediate.controller.request.LoginRequestDto;
 import com.example.intermediate.controller.request.MemberRequestDto;
-import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.controller.request.TokenDto;
 import com.example.intermediate.jwt.TokenProvider;
+import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.MemberRepository;
+
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.example.intermediate.repository.PostRepository;
+import com.example.intermediate.repository.like.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,6 +35,12 @@ public class MemberService {
   private final PasswordEncoder passwordEncoder;
 //  private final AuthenticationManagerBuilder authenticationManagerBuilder;
   private final TokenProvider tokenProvider;
+
+  private final PostService postService;
+
+  private final CommentService commentService;
+
+  private final LikeService likeService;
 
   @Transactional
   public ResponseDto<?> createMember(MemberRequestDto requestDto) {
@@ -121,6 +133,25 @@ public class MemberService {
     }
 
     return tokenProvider.deleteRefreshToken(member);
+  }
+
+  public ResponseDto<?> getMemberActivityList(HttpServletRequest request) {
+    if (!tokenProvider.validateToken(request.getHeader("Refresh-Token"))) {
+      return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+    }
+    Member member = tokenProvider.getMemberFromAuthentication();
+    if (null == member) {
+      return ResponseDto.fail("MEMBER_NOT_FOUND",
+              "사용자를 찾을 수 없습니다.");
+    }
+    List<PostResponseDto> responseDtoList = postService.getAllPostByMember(member);
+    List<CommentResponseDto> commentResponseDtoList = commentService.getAllCommentsByMember(member);
+    List<PostResponseDto> postResponseDtoList = likeService.getAllPostLikesByMember(member);
+    return ResponseDto.success(MyPageReponseDto.builder()
+                    .postLikeResponseDtoList(postResponseDtoList)
+                    .postResponseDtoList(responseDtoList)
+                    .commentResponseDtoList(commentResponseDtoList)
+                    .build());
   }
 
   @Transactional(readOnly = true)
