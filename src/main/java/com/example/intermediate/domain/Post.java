@@ -1,7 +1,6 @@
 package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.PostRequestDto;
-import javax.persistence.*;
 import com.example.intermediate.domain.Like.PostLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -10,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
