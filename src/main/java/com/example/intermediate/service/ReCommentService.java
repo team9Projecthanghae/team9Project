@@ -56,21 +56,19 @@ public class ReCommentService {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
 
-        ReComment recomment = ReComment.builder()
+        ReComment reComment = ReComment.builder()
                 .member(member)
                 .comment(comment)
                 .reContent(requestDto.getReContent())
                 .build();
-
-
-        recommentRepository.save(recomment);
+        recommentRepository.save(reComment);
         return ResponseDto.success(
                 ReCommentResponseDto.builder()
-                        .id(recomment.getId())
-                        .author(recomment.getMember().getNickname())
-                        .reContent(recomment.getReContent())
-                        .createdAt(recomment.getCreatedAt())
-                        .modifiedAt(recomment.getModifiedAt())
+                        .id(reComment.getId())
+                        .author(reComment.getMember().getNickname())
+                        .reContent(reComment.getReContent())
+                        .createdAt(reComment.getCreatedAt())
+                        .modifiedAt(reComment.getModifiedAt())
                         .build()
         );
     }

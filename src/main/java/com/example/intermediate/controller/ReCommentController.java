@@ -16,27 +16,27 @@ public class ReCommentController {
 
     private final ReCommentService recommentService;
 
-    @RequestMapping(value = "/api/auth/recomments", method = RequestMethod.POST)
+    @PostMapping("/api/auth/recomments")
     public ResponseDto<?> createReComment(@RequestBody ReCommentRequestDto requestDto,
                                         HttpServletRequest request) {
         return recommentService.createReComment(requestDto, request);
     }
 
 
-    @RequestMapping(value = "/api/recomments/{id}", method = RequestMethod.GET)
+    @GetMapping("/api/recomments/{id}")
     public ResponseDto<?> getAllReComments(@PathVariable Long id) {
         return recommentService.getAllReCommentsByPost(id);
     }
 
 
-    @RequestMapping(value = "/api/auth/recomments/{id}", method = RequestMethod.PUT)
+    @PutMapping("/api/auth/recomments/{id}")
     public ResponseDto<?> updateReComment(@PathVariable Long id, @RequestBody ReCommentRequestDto requestDto,
                                         HttpServletRequest request) {
         return recommentService.updateReComment(id, requestDto, request);
     }
 
 
-    @RequestMapping(value = "/api/auth/recomments/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/api/auth/recomments/{id}")
     public ResponseDto<?> deleteReComment(@PathVariable Long id, HttpServletRequest request) {
         return recommentService.deleteReComment(id, request);
     }

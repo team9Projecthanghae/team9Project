@@ -26,7 +26,7 @@ public class LikeController {
         return likeService.pushCommentLike(id, request);
     }
 
-    @PostMapping("/api/recomment/{id}/like")
+    @PostMapping("/api/auth/recomments/{id}/like")
     public ResponseDto<?> pushReCommentLike(@PathVariable Long id, HttpServletRequest request) {
         return likeService.pushReCommentLike(id, request);
     }

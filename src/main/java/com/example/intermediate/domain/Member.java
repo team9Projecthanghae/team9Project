@@ -23,58 +23,61 @@ import org.springframework.transaction.annotation.Transactional;
 @Entity
 public class Member extends Timestamped {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false)
-  private String nickname;
+    @Column(nullable = false)
+    private String nickname;
 
-  @Column(nullable = false)
-  @JsonIgnore
-  private String password;
+    @Column(nullable = false)
+    @JsonIgnore
+    private String password;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Member member = (Member) o;
+        return id != null && Objects.equals(id, member.id);
     }
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-      return false;
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
-    Member member = (Member) o;
-    return id != null && Objects.equals(id, member.id);
-  }
 
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
+    public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
+        return passwordEncoder.matches(password, this.password);
+    }
 
-  public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
-    return passwordEncoder.matches(password, this.password);
-  }
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
+    private Set<PostLike> postLikeList = new HashSet<>();
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
-  private Set<PostLike> postLikeList = new HashSet<>();
+    @Transactional
+    public void mappingPostLike(PostLike postLike) {
+        this.postLikeList.add(postLike);
+    }
 
-  @Transactional
-  public void mappingPostLike(PostLike postLike) {
-    this.postLikeList.add(postLike);
-  }
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
+    private Set<CommentLike> commentLikeList = new HashSet<>();
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
-  private Set<CommentLike> commentLikeList = new HashSet<>();
+    @Transactional
+    public void mappingCommentLike(CommentLike commentLike) {
+        this.commentLikeList.add(commentLike);
+    }
 
-  @Transactional
-  public void mappingCommentLike(CommentLike commentLike) {
-    this.commentLikeList.add(commentLike);
-  }
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+    private Set<ReCommentLike> reCommentLikeList = new HashSet<>();
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
-  private Set<ReCommentLike> reCommentLikeList = new HashSet<>();
-
-  public void mappingReCommentLike(ReCommentLike reCommentLike) {
-    this.reCommentLikeList.add(reCommentLike);
-  }
+    public void mappingReCommentLike(ReCommentLike reCommentLike) {
+        this.reCommentLikeList.add(reCommentLike);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.ReCommentRequestDto;
 import com.example.intermediate.domain.Like.ReCommentLike;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,8 +34,6 @@ public class ReComment extends Timestamped {
     @Column(nullable = false)
     private String reContent;
 
-    @Column
-    private int reLikeCount;
 
     public void update(ReCommentRequestDto reCommentRequestDto ) {
         this.reContent = reCommentRequestDto.getReContent();
@@ -43,6 +42,7 @@ public class ReComment extends Timestamped {
    public boolean validateMember(Member member) {
        return !this.member.equals(member);
      }
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "reComment", cascade = CascadeType.ALL)
     private List<ReCommentLike> reCommentLikeList = new ArrayList<>();
 

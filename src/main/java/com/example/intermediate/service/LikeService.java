@@ -17,6 +17,7 @@ import com.example.intermediate.repository.like.CommentLikeRepository;
 import com.example.intermediate.repository.like.PostLikeRepository;
 import com.example.intermediate.repository.like.ReCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -163,6 +165,7 @@ public class LikeService {
 
 
     public ResponseDto<?>pushReCommentLike (Long id, HttpServletRequest request){
+        log.info("1");
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
@@ -173,18 +176,24 @@ public class LikeService {
         }
 
         Member member = validateMember(request);
+        log.info("2");
 
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
 
         ReComment reComment =isPresentReComment(id);
+        if(reComment==null){
+        log.info("멍청아");}else{
+        log.info("마리아");}
+
 
         Optional<ReCommentLike> ByReCommentAndMember = reCommentLikeRepository.findByReCommentAndMember(reComment, member);
         ByReCommentAndMember.ifPresentOrElse(
                 reCommentLike -> {
                     reCommentLikeRepository.delete(reCommentLike);
                     reComment.discountLike(reCommentLike);
+                    log.info("3");
                     },
 
                     () ->{
@@ -192,12 +201,14 @@ public class LikeService {
                     reCommentLike.mappingReCommentLike(reComment);
                     reCommentLike.mappingMember(member);
                     reCommentLikeRepository.save(reCommentLike);
+                        log.info("4");
                     }
                 );
         return ResponseDto.success(true);
     }
     @Transactional(readOnly = true)
     public ReComment isPresentReComment(Long id) {
+        log.info("뾰잉");
         Optional<ReComment> optionalReComment = reCommentRepository.findById(id);
         return optionalReComment.orElse(null);
     }

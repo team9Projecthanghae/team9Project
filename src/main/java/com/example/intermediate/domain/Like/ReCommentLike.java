@@ -23,7 +23,7 @@ public class ReCommentLike {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "post_id"))
+    @JoinColumn(name = "re_comment_id", foreignKey = @ForeignKey(name = "re_comment_id"))
     private ReComment reComment;
 
 
