@@ -86,6 +86,8 @@ private final CommentLikeRepository commentLikeRepository;
         Optional<Post> optionalPost = postRepository.findById(id);
         return optionalPost.orElse(null);
     }
+
+    @Transactional
     public ResponseDto<?>pushCommentLike (Long id, HttpServletRequest request){
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",

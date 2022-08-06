@@ -55,17 +55,19 @@ public class Member extends Timestamped {
   public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
     return passwordEncoder.matches(password, this.password);
   }
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
   private List<PostLike> postLikeList = new ArrayList<>();
 
-
+  @Transactional
   public void mappingPostLike(PostLike postLike) {
     this.postLikeList.add(postLike);
   }
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.REMOVE)
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
   private List<CommentLike> commentLikeList = new ArrayList<>();
 
+  @Transactional
   public void mappingCommentLike(CommentLike commentLike) {
     this.commentLikeList.add(commentLike);
   }

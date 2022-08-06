@@ -82,13 +82,8 @@ public class CommentService {
 
         for (Comment comment : commentList) {
             List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
-            int likeCount;
-            if (commentLikeList.isEmpty()) {
-                likeCount = 0;
-            } else {
-                likeCount = commentLikeList.size();
+            int likeCount = commentLikeList.size();
 
-            }
             commentResponseDtoList.add(
                     CommentResponseDto.builder()
                             .id(comment.getId())
