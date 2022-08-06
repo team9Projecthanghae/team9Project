@@ -1,5 +1,8 @@
 package com.example.intermediate.service;
 
+import com.example.intermediate.controller.response.CommentResponseDto;
+import com.example.intermediate.controller.response.PostLikeReponseDto;
+import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Like.CommentLike;
@@ -16,6 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,6 +35,8 @@ private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
 
 //    private final RecommentRepository recommentRepository;
+
+    private final PostService postService;
 
 
     @Transactional
@@ -97,6 +105,29 @@ private final CommentLikeRepository commentLikeRepository;
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
         }
+    public List<PostResponseDto> getAllPostLikesByMember(Member member){
+       List<PostLike> postLikeList = postLikeRepository.findPostLikesByMember(member);
+       List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for(PostLike postLike : postLikeList) {
+            String url = postService.getImageUrlByPost(postLike.getPost());
+            List<PostLike> postLikeListByPost = postLikeRepository.findAllByPost(postLike.getPost());
+            int likeCount= postLikeListByPost.size();
+            postResponseDtoList.add(
+                    PostResponseDto.builder()
+                            .title(postLike.getPost().getTitle())
+                            .author(postLike.getPost().getMember().getNickname())
+                            .modifiedAt(postLike.getPost().getModifiedAt())
+                            .createdAt(postLike.getPost().getCreatedAt())
+                            .content(postLike.getPost().getContent())
+                            .id(postLike.getPost().getId())
+                            .imageUrl(url)
+                            .likeCount(likeCount)
+                            .build()
+            );
+        }
+        return postResponseDtoList;
+    }
+
 
         Member member = validateMember(request);
 

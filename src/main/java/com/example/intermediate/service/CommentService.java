@@ -1,5 +1,6 @@
 package com.example.intermediate.service;
 
+
 import com.example.intermediate.controller.request.CommentRequestDto;
 import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
@@ -185,4 +186,25 @@ public class CommentService {
         }
         return tokenProvider.getMemberFromAuthentication();
     }
+
+  @Transactional(readOnly = true)
+  public List<CommentResponseDto> getAllCommentsByMember(Member member) {
+    List<Comment> commentList = commentRepository.findAllByMember(member);
+    List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+
+    for(Comment comment : commentList) {
+      commentResponseDtoList.add(
+      CommentResponseDto.builder()
+              .id(comment.getId())
+              .author(comment.getMember().getNickname())
+              .content(comment.getContent())
+              .createdAt(comment.getCreatedAt())
+              .modifiedAt(comment.getModifiedAt())
+              .build()
+      );
+    }
+    return commentResponseDtoList;
+  }
+
+
 }

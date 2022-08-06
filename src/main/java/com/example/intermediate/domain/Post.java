@@ -1,16 +1,14 @@
 package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.PostRequestDto;
+import javax.persistence.*;
 import com.example.intermediate.domain.Like.PostLike;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -40,6 +38,10 @@ public class Post extends Timestamped {
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = LAZY)
   private Member member;
+
+  @OneToOne(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
+  private File file;
 
   public void update(PostRequestDto postRequestDto) {
     this.title = postRequestDto.getTitle();
