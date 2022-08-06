@@ -5,13 +5,17 @@ import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
+import com.example.intermediate.domain.Like.ReCommentLike;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
+import com.example.intermediate.domain.ReComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.PostRepository;
+import com.example.intermediate.repository.ReCommentRepository;
 import com.example.intermediate.repository.like.CommentLikeRepository;
 import com.example.intermediate.repository.like.PostLikeRepository;
+import com.example.intermediate.repository.like.ReCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,8 +34,8 @@ public class LikeService {
     private final PostLikeRepository postLikeRepository;
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
-
-//    private final RecommentRepository recommentRepository;
+    private final ReCommentLikeRepository reCommentLikeRepository;
+    private final ReCommentRepository reCommentRepository;
 
     private final PostService postService;
 
@@ -63,8 +67,6 @@ public class LikeService {
                 postLike -> {
                     postLikeRepository.delete(postLike);
                     post.discountLike(postLike);
-
-
                 },
                 // 좋아요가 없을 경우 좋아요 추가
                 () -> {
@@ -159,43 +161,44 @@ public class LikeService {
         return optionalComment.orElse(null);
     }
 
-//    public ResponseDto<?>pushRecommentLike (Long id, HttpServletRequest request){
-//        if (null == request.getHeader("Refresh-Token")) {
-//            return ResponseDto.fail("MEMBER_NOT_FOUND",
-//                    "로그인이 필요합니다.");
-//        }
-//        if (null == request.getHeader("Authorization")) {
-//            return ResponseDto.fail("MEMBER_NOT_FOUND",
-//                    "로그인이 필요합니다.");
-//        }
-//
-//        Member member = validateMember(request);
-//
-//        if (null == member) {
-//            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-//        }
-//
-//        Recomment recomment =isPresentRecomment(id);
-//
-//        Optional<RecommentLike> ByRecommentAndMember = recommentRepository.findByRecommentAndMember(recomment, member);
-//        ByRecommentAndMember.ifPresentOrElse(
-//                recommentLike -> {
-//                    recommentLikeRepository.delete(recommentLike);
-//                    recomment.discountLike(recommentLike);
-//                    },
-//                    () ->{
-//                    RecommentLike recommentLike = RecommentLike.builder().build();
-//                    recommentLike.mappingRecomment(recomment);
-//                    recommentLike.mappingMember(member);
-//
-//                    recommentLikeRepository.save(recommentLike);
-//                    }
-//                );
-//        return ResponseDto.success(true);
-//    }
-//    @Transactional(readOnly = true)
-//    public Recomment isPresentRecomment(Long id) {
-//        Optional<Recomment> optionalRecomment = recommentRepository.findById(id);
-//        return optionalRecomment.orElse(null);
-//    }
+
+    public ResponseDto<?>pushReCommentLike (Long id, HttpServletRequest request){
+        if (null == request.getHeader("Refresh-Token")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
+        if (null == request.getHeader("Authorization")) {
+            return ResponseDto.fail("MEMBER_NOT_FOUND",
+                    "로그인이 필요합니다.");
+        }
+
+        Member member = validateMember(request);
+
+        if (null == member) {
+            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
+        }
+
+        ReComment reComment =isPresentReComment(id);
+
+        Optional<ReCommentLike> ByReCommentAndMember = reCommentLikeRepository.findByReCommentAndMember(reComment, member);
+        ByReCommentAndMember.ifPresentOrElse(
+                reCommentLike -> {
+                    reCommentLikeRepository.delete(reCommentLike);
+                    reComment.discountLike(reCommentLike);
+                    },
+
+                    () ->{
+                    ReCommentLike reCommentLike = ReCommentLike.builder().build();
+                    reCommentLike.mappingReCommentLike(reComment);
+                    reCommentLike.mappingMember(member);
+                    reCommentLikeRepository.save(reCommentLike);
+                    }
+                );
+        return ResponseDto.success(true);
+    }
+    @Transactional(readOnly = true)
+    public ReComment isPresentReComment(Long id) {
+        Optional<ReComment> optionalReComment = reCommentRepository.findById(id);
+        return optionalReComment.orElse(null);
+    }
 }

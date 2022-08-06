@@ -3,6 +3,7 @@ package com.example.intermediate.service;
 import com.example.intermediate.controller.request.PostRequestDto;
 import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.PostResponseDto;
+import com.example.intermediate.controller.response.ReCommentAllResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.*;
 import com.example.intermediate.domain.Like.CommentLike;
@@ -14,6 +15,7 @@ import com.example.intermediate.repository.PostRepository;
 import com.example.intermediate.repository.ReCommentRepository;
 import com.example.intermediate.repository.like.CommentLikeRepository;
 import com.example.intermediate.repository.like.PostLikeRepository;
+import com.example.intermediate.repository.like.ReCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,8 +38,9 @@ public class PostService {
   private final CommentLikeRepository commentLikeRepository;
   private final FileRepository fileRepository;
 
-  private final ReCommentRepository recommentRepository;
+  private final ReCommentRepository reCommentRepository;
   private final PostLikeRepository postLikeRepository;
+  private  final ReCommentLikeRepository reCommentLikeRepository;
 
   @Transactional
   public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
@@ -87,8 +90,23 @@ public class PostService {
     for (Comment comment : commentList) {
       List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
       int likeCount = commentLikeList.size();
-      List<ReComment> recommentList = recommentRepository.findAllByComment(comment);
-
+      List<ReComment> reCommentListTemp = reCommentRepository.findAllByComment(comment);
+      List <ReCommentAllResponseDto> reCommentAllList =new ArrayList<>();
+      for (ReComment value : reCommentListTemp) {
+        Long reCommentId = value.getId();
+        ReComment reComment = isPresentReComment(reCommentId);
+        int reLikeCount = reCommentLikeRepository.findByReComment(reComment).size();
+        reCommentAllList.add(
+                ReCommentAllResponseDto.builder()
+                        .id(reComment.getId())
+                        .author(reComment.getMember().getNickname())
+                        .reContent(reComment.getReContent())
+                        .createdAt(reComment.getCreatedAt())
+                        .modifiedAt(reComment.getModifiedAt())
+                        .reLikeCount(reLikeCount)
+                        .build()
+        );
+      }
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
@@ -97,7 +115,7 @@ public class PostService {
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
                       .likeCount(likeCount)
-                      .recommentResponseDtoList(recommentList)
+                      .reCommentResponseDtoList(reCommentAllList)
                       .build()
       );
     }
@@ -121,6 +139,11 @@ public class PostService {
                     .likeCount(likeCount)
                     .build()
     );
+  }
+  @Transactional(readOnly = true)
+  public ReComment isPresentReComment(Long id) {
+    Optional<ReComment> optionalReComment =reCommentRepository.findById(id);
+    return optionalReComment.orElse(null);
   }
 
   @Transactional(readOnly = true)

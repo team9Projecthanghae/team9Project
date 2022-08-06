@@ -2,6 +2,7 @@ package com.example.intermediate.domain;
 
 import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
+import com.example.intermediate.domain.Like.ReCommentLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.*;
@@ -69,11 +70,11 @@ public class Member extends Timestamped {
   public void mappingCommentLike(CommentLike commentLike) {
     this.commentLikeList.add(commentLike);
   }
-//
-//  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
-//  private Se<recommentLike> recommentLikeList = new HashSet<>();
-//
-//  public void mappingRecommentLike(RecommentLike recommentLike) {
-//    this.RecommentLikeList.add(recommentLike);
-//  }
+
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+  private Set<ReCommentLike> reCommentLikeList = new HashSet<>();
+
+  public void mappingReCommentLike(ReCommentLike reCommentLike) {
+    this.reCommentLikeList.add(reCommentLike);
+  }
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReCommentRequestDto {
     private Long commentId;
-    private String recomment;
+    private String reContent;
 
 }
 

@@ -20,5 +20,5 @@ public class CommentResponseDto {
   private LocalDateTime createdAt;
   private LocalDateTime modifiedAt;
   private int likeCount;
-  private List<ReComment> recommentResponseDtoList;
+  private List<ReCommentAllResponseDto> reCommentResponseDtoList;
 }

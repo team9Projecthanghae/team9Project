@@ -15,9 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class LikeController {
     private final LikeService likeService;
-    private final PostService postService;
-    private final CommentService commentService;
-//    private  final RecommentService recommentService;
 
     @PostMapping("/api/auth/post/{id}/like")
     public ResponseDto<?> pushPostLike(@PathVariable Long id, HttpServletRequest request) {
@@ -29,10 +26,10 @@ public class LikeController {
         return likeService.pushCommentLike(id, request);
     }
 
-//    @PostMapping("/api/recomment/{id}/like")
-//    public ResponseDto<?> pushrecommentlike(@PathVariable Long id, HttpServletRequest request) {
-//        return likeService.pushCRecommentLike(id, request);
-//    }
+    @PostMapping("/api/recomment/{id}/like")
+    public ResponseDto<?> pushReCommentLike(@PathVariable Long id, HttpServletRequest request) {
+        return likeService.pushReCommentLike(id, request);
+    }
 
 }
 

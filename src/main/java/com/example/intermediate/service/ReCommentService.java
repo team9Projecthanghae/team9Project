@@ -5,7 +5,10 @@ import com.example.intermediate.controller.request.ReCommentRequestDto;
 import com.example.intermediate.controller.response.ReCommentResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
+import com.example.intermediate.domain.Like.CommentLike;
+import com.example.intermediate.domain.Like.ReCommentLike;
 import com.example.intermediate.domain.Member;
+import com.example.intermediate.domain.Post;
 import com.example.intermediate.domain.ReComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.ReCommentRepository;
@@ -13,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +59,7 @@ public class ReCommentService {
         ReComment recomment = ReComment.builder()
                 .member(member)
                 .comment(comment)
-                .recomment(requestDto.getRecomment())
+                .reContent(requestDto.getReContent())
                 .build();
 
 
@@ -62,7 +68,7 @@ public class ReCommentService {
                 ReCommentResponseDto.builder()
                         .id(recomment.getId())
                         .author(recomment.getMember().getNickname())
-                        .recomment(recomment.getRecomment())
+                        .reContent(recomment.getReContent())
                         .createdAt(recomment.getCreatedAt())
                         .modifiedAt(recomment.getModifiedAt())
                         .build()
@@ -84,7 +90,7 @@ public class ReCommentService {
                     ReCommentResponseDto.builder()
                             .id(recomment.getId())
                             .author(recomment.getMember().getNickname())
-                            .recomment(recomment.getRecomment())
+                            .reContent(recomment.getReContent())
                             .createdAt(recomment.getCreatedAt())
                             .modifiedAt(recomment.getModifiedAt())
                             .build()
@@ -110,8 +116,8 @@ public class ReCommentService {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
 
-//        Post post = postService.isPresentPost(requestDto.getPostId());
-//        if (null == post) {
+//        Comment comment = commentService.isPresentComment(requestDto.getCommentId());
+//        if (null == comment) {
 //            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
 //        }
 
@@ -131,7 +137,7 @@ public class ReCommentService {
                 ReCommentResponseDto.builder()
                         .id(recomment.getId())
                         .author(recomment.getMember().getNickname())
-                        .recomment(recomment.getRecomment())
+                        .reContent(recomment.getReContent())
                         .createdAt(recomment.getCreatedAt())
                         .modifiedAt(recomment.getModifiedAt())
                         .build()
@@ -181,4 +187,5 @@ public class ReCommentService {
         }
         return tokenProvider.getMemberFromAuthentication();
     }
+
 }

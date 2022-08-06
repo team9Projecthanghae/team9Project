@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Builder
@@ -32,8 +33,8 @@ public class Comment extends Timestamped {
   @ManyToOne(fetch = LAZY)
   private Post post;
 
-//  @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<Recomment> recomments;
+  @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ReComment> reComments;
 
   @Column(nullable = false)
   private String content;
