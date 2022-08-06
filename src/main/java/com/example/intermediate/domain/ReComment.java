@@ -23,28 +23,19 @@ public class ReComment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @JoinColumn(name = "post_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
 
     @JoinColumn(name = "comment_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Post comment;
+    private Comment comment;
 
-    @JoinColumn(name = "comment_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post content;
-
-//    @Column(nullable = false)
-//    private Long LikeCounter;
 
     @Column(nullable = false)
     private String recomment;
 
-
-    public void update(ReCommentRequestDto recommentRequestDto) {
-        this.recomment = recommentRequestDto.getrecomment();
+    public void update(ReCommentRequestDto recommentRequestDto ) {
+        this.recomment = recommentRequestDto.getRecomment();
     }
+
 
    public boolean validateMember(Member member) {
        return !this.member.equals(member);

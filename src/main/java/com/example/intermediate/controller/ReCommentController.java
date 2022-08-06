@@ -1,13 +1,11 @@
 package com.example.intermediate.controller;
 
-
 import com.example.intermediate.controller.request.ReCommentRequestDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.service.ReCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 
 @Validated
@@ -18,30 +16,29 @@ public class ReCommentController {
 
     private final ReCommentService recommentService;
 
-    @RequestMapping(value = "/api/auth/recomment", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/auth/recomments", method = RequestMethod.POST)
     public ResponseDto<?> createReComment(@RequestBody ReCommentRequestDto requestDto,
                                         HttpServletRequest request) {
         return recommentService.createReComment(requestDto, request);
     }
 
 
-    @RequestMapping(value = "/api/recomment/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/recomments/{id}", method = RequestMethod.GET)
     public ResponseDto<?> getAllReComments(@PathVariable Long id) {
         return recommentService.getAllReCommentsByPost(id);
     }
 
 
-
-    @RequestMapping(value = "/api/auth/recomment/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/auth/recomments/{id}", method = RequestMethod.PUT)
     public ResponseDto<?> updateReComment(@PathVariable Long id, @RequestBody ReCommentRequestDto requestDto,
                                         HttpServletRequest request) {
         return recommentService.updateReComment(id, requestDto, request);
     }
 
 
-
-    @RequestMapping(value = "/api/auth/recomment/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/auth/recomments/{id}", method = RequestMethod.DELETE)
     public ResponseDto<?> deleteReComment(@PathVariable Long id, HttpServletRequest request) {
         return recommentService.deleteReComment(id, request);
     }
 }
+
