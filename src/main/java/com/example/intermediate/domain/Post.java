@@ -29,7 +29,6 @@ public class Post extends Timestamped {
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
-  //게시글을 불러올때 리스트에 해당하는 대댓글도 같이 가져온다.
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ReComment> recomments;
 
@@ -37,6 +36,9 @@ public class Post extends Timestamped {
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = FetchType.LAZY)
   private Member member;
+
+  //  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//  private List<ReComment> recomments;
 
   public void update(PostRequestDto postRequestDto) {
     this.title = postRequestDto.getTitle();

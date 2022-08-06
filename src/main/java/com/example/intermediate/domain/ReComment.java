@@ -28,7 +28,6 @@ public class ReComment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
-
     @Column(nullable = false)
     private String recomment;
 
