@@ -1,8 +1,7 @@
 package com.example.intermediate.domain;
 
-import com.example.intermediate.controller.request.ReCommentRequestDto;
+import com.example.intermediate.controller.response.request.ReCommentRequestDto;
 import com.example.intermediate.domain.Like.ReCommentLike;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

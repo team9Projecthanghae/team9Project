@@ -19,11 +19,11 @@ public class ReCommentLike {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_id"))
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "re_comment_id", foreignKey = @ForeignKey(name = "re_comment_id"))
+    @JoinColumn(name = "re_comment_id")
     private ReComment reComment;
 
 

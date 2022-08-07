@@ -4,10 +4,6 @@ import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
 import com.example.intermediate.domain.Like.ReCommentLike;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.*;
-import javax.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +11,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -30,8 +31,8 @@ public class Member extends Timestamped {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
     @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
     @Override
@@ -55,7 +56,7 @@ public class Member extends Timestamped {
         return passwordEncoder.matches(password, this.password);
     }
 
-    @JsonIgnore
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
     private Set<PostLike> postLikeList = new HashSet<>();
 
@@ -64,7 +65,7 @@ public class Member extends Timestamped {
         this.postLikeList.add(postLike);
     }
 
-    @JsonIgnore
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
     private Set<CommentLike> commentLikeList = new HashSet<>();
 
@@ -73,8 +74,8 @@ public class Member extends Timestamped {
         this.commentLikeList.add(commentLike);
     }
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.REMOVE)
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
     private Set<ReCommentLike> reCommentLikeList = new HashSet<>();
 
     public void mappingReCommentLike(ReCommentLike reCommentLike) {

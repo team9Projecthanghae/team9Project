@@ -20,11 +20,11 @@ public class PostLike {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_id"))
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "post_id"))
+    @JoinColumn(name = "post_id")
     private Post post;
 
     public void mappingMember(Member member) {

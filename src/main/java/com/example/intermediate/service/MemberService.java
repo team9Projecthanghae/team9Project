@@ -2,9 +2,9 @@ package com.example.intermediate.service;
 
 import com.example.intermediate.controller.response.*;
 import com.example.intermediate.domain.Member;
-import com.example.intermediate.controller.request.LoginRequestDto;
-import com.example.intermediate.controller.request.MemberRequestDto;
-import com.example.intermediate.controller.request.TokenDto;
+import com.example.intermediate.controller.response.request.LoginRequestDto;
+import com.example.intermediate.controller.response.request.MemberRequestDto;
+import com.example.intermediate.controller.response.request.TokenDto;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.MemberRepository;
 

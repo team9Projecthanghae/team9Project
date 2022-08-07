@@ -1,10 +1,7 @@
 package com.example.intermediate.service;
 
-import com.example.intermediate.controller.request.PostRequestDto;
-import com.example.intermediate.controller.response.CommentResponseDto;
-import com.example.intermediate.controller.response.PostResponseDto;
-import com.example.intermediate.controller.response.ReCommentAllResponseDto;
-import com.example.intermediate.controller.response.ResponseDto;
+import com.example.intermediate.controller.response.request.PostRequestDto;
+import com.example.intermediate.controller.response.*;
 import com.example.intermediate.domain.*;
 import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
@@ -48,16 +45,19 @@ public class PostService {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
               "로그인이 필요합니다.");
     }
-
     if (null == request.getHeader("Authorization")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
               "로그인이 필요합니다.");
     }
-
     Member member = validateMember(request);
     if (null == member) {
       return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
     }
+    if(requestDto.getTitle()==null){return ResponseDto.fail("TITLE_EMPTY", "제목 칸이 비었습니다.");
+    }
+    if(requestDto.getContent()==null){return ResponseDto.fail("CONTENT_EMPTY", "작성된 글이 없습니다.");
+    }
+
 
     Post post = Post.builder()
             .title(requestDto.getTitle())
@@ -119,9 +119,7 @@ public class PostService {
                       .build()
       );
     }
-
     String url = getImageUrlByPost(post);
-
 
     List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
     int likeCount= postLikeList.size();
@@ -148,8 +146,27 @@ public class PostService {
 
   @Transactional(readOnly = true)
   public ResponseDto<?> getAllPost() {
-    return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
+    List<PostAllResponseDto> postAllList= new ArrayList<>();
+    List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
+    for (Post post : postList) {
+      List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
+      int likeCount = postLikeList.size();
+      String url = getImageUrlByPost(post);
+      postAllList.add(
+              PostAllResponseDto.builder()
+                      .id(post.getId())
+                      .title(post.getTitle())
+                      .author(post.getMember().getNickname())
+                      .createdAt(post.getCreatedAt())
+                      .modifiedAt(post.getModifiedAt())
+                      .imageUrl(url)
+                      .likeCount(likeCount)
+                      .build()
+      );
+    }
+    return ResponseDto.success(postAllList);
   }
+
 
   @Transactional
   public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
@@ -235,7 +252,6 @@ public class PostService {
     }
     return url;
   }
-
 
 
   @Transactional(readOnly = true)

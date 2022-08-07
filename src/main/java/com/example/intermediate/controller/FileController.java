@@ -13,8 +13,9 @@ import java.io.IOException;
 public class FileController {
 
     private final FileService fileService;
+    private final String string = "/api/auth/image";
 
-    @PostMapping("/api/auth/image")
+    @PostMapping(string)
     public ResponseDto<?> upload(@RequestPart("postId") Long postId, @RequestPart("file") MultipartFile file,
                                  HttpServletRequest request
     ) throws IOException {
