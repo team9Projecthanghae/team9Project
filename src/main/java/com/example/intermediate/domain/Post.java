@@ -37,7 +37,6 @@ public class Post extends Timestamped {
   @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
-
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = LAZY)
   private Member member;

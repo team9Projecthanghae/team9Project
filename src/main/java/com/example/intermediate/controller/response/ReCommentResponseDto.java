@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ReCommentResponseDto {
     private Long id;
     private String author;
-    private String recomment;
+    private String reContent;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 }

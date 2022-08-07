@@ -5,10 +5,7 @@ import com.example.intermediate.controller.request.MemberRequestDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,12 +17,12 @@ public class MemberController {
 
   private final MemberService memberService;
 
-  @RequestMapping(value = "/api/member/signup", method = RequestMethod.POST)
+  @PostMapping("/api/member/signup")
   public ResponseDto<?> signup(@RequestBody @Valid MemberRequestDto requestDto) {
     return memberService.createMember(requestDto);
   }
 
-  @RequestMapping(value = "/api/member/login", method = RequestMethod.POST)
+  @PostMapping("/api/member/login")
   public ResponseDto<?> login(@RequestBody @Valid LoginRequestDto requestDto,
       HttpServletResponse response
   ) {
@@ -37,12 +34,12 @@ public class MemberController {
 //    return memberService.reissue(request, response);
 //  }
 
-  @RequestMapping(value = "/api/auth/member/logout", method = RequestMethod.POST)
+  @PostMapping("/api/auth/member/logout")
   public ResponseDto<?> logout(HttpServletRequest request) {
     return memberService.logout(request);
   }
 
-  @RequestMapping(value = "/api/auth/member/mypage", method = RequestMethod.GET)
+  @GetMapping("/api/auth/member/mypage")
   public ResponseDto<?> getMyPage(HttpServletRequest request) {
     return memberService.getMemberActivityList(request);
   }

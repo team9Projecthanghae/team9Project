@@ -89,6 +89,7 @@ public class PostService {
       int likeCount = commentLikeList.size();
       List<ReComment> recommentList = recommentRepository.findAllByComment(comment);
 
+
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())

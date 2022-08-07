@@ -29,10 +29,10 @@ public class ReComment extends Timestamped {
     private Comment comment;
 
     @Column(nullable = false)
-    private String recomment;
+    private String reContent;
 
     public void update(ReCommentRequestDto recommentRequestDto ) {
-        this.recomment = recommentRequestDto.getRecomment();
+        this.reContent = recommentRequestDto.getReContent();
     }
 
 
