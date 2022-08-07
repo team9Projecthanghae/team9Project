@@ -1,6 +1,6 @@
 package com.example.intermediate.service;
 
-import com.example.intermediate.controller.response.request.PostRequestDto;
+import com.example.intermediate.controller.request.PostRequestDto;
 import com.example.intermediate.controller.response.*;
 import com.example.intermediate.domain.*;
 import com.example.intermediate.domain.Like.CommentLike;

@@ -1,6 +1,6 @@
 package com.example.intermediate.service;
 
-import com.example.intermediate.controller.response.request.CommentRequestDto;
+import com.example.intermediate.controller.request.CommentRequestDto;
 import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;

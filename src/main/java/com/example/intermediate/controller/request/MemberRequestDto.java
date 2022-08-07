@@ -1,4 +1,4 @@
-package com.example.intermediate.controller.response.request;
+package com.example.intermediate.controller.request;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

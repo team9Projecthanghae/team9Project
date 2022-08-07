@@ -1,6 +1,6 @@
 package com.example.intermediate.domain;
 
-import com.example.intermediate.controller.response.request.CommentRequestDto;
+import com.example.intermediate.controller.request.CommentRequestDto;
 import com.example.intermediate.domain.Like.CommentLike;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,13 +33,11 @@ public class Comment extends Timestamped {
     @ManyToOne(fetch = LAZY)
     private Post post;
 
-
     @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReComment> reComments;
 
     @Column(nullable = false)
     private String content;
-
 
     public void update(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
@@ -52,11 +50,9 @@ public class Comment extends Timestamped {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
-
     public void mappingCommentLike(CommentLike commentLike) {
         this.commentLikeList.add(commentLike);
     }
-
 
     public void discountLike(CommentLike commentLike) {
         this.commentLikeList.remove(commentLike);

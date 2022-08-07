@@ -19,7 +19,6 @@ public class FileController {
     public ResponseDto<?> upload(@RequestPart("postId") Long postId, @RequestPart("file") MultipartFile file,
                                  HttpServletRequest request
     ) throws IOException {
-
         return fileService.upload(postId,file,request);
     }
 

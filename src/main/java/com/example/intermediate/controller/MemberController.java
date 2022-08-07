@@ -1,7 +1,7 @@
 package com.example.intermediate.controller;
 
-import com.example.intermediate.controller.response.request.LoginRequestDto;
-import com.example.intermediate.controller.response.request.MemberRequestDto;
+import com.example.intermediate.controller.request.LoginRequestDto;
+import com.example.intermediate.controller.request.MemberRequestDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.service.MemberService;
 import lombok.RequiredArgsConstructor;
