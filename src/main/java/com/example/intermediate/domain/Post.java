@@ -33,7 +33,7 @@ public class Post extends Timestamped {
   private String content;
 
 
-  @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = EAGER,mappedBy = "post",cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
   @JoinColumn(name = "member_id", nullable = false)

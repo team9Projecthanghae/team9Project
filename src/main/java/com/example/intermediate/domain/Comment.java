@@ -33,7 +33,7 @@ public class Comment extends Timestamped {
     @ManyToOne(fetch = LAZY)
     private Post post;
 
-    @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = EAGER,mappedBy="comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReComment> reComments;
 
     @Column(nullable = false)
