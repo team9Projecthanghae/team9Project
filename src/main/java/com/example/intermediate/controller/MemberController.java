@@ -29,17 +29,12 @@ public class MemberController {
     return memberService.login(requestDto, response);
   }
 
-//  @RequestMapping(value = "/api/auth/member/reissue", method = RequestMethod.POST)
-//  public ResponseDto<?> reissue(HttpServletRequest request, HttpServletResponse response) {
-//    return memberService.reissue(request, response);
-//  }
 
   @PostMapping("/api/auth/member/logout")
   public ResponseDto<?> logout(HttpServletRequest request) {
     return memberService.logout(request);
   }
 
-  @GetMapping("/api/auth/member/mypage")
   @GetMapping(value = "/api/auth/member/mypage")
   public ResponseDto<?> getMyPage(HttpServletRequest request) {
     return memberService.getMemberActivityList(request);

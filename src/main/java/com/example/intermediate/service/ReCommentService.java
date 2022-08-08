@@ -60,11 +60,6 @@ public class ReCommentService {
         recommentRepository.save(reComment);
         return ResponseDto.success(
                 ReCommentResponseDto.builder()
-                        .id(recomment.getId())
-                        .author(recomment.getMember().getNickname())
-                        .reContent(recomment.getReContent())
-                        .createdAt(recomment.getCreatedAt())
-                        .modifiedAt(recomment.getModifiedAt())
                         .id(reComment.getId())
                         .author(reComment.getMember().getNickname())
                         .reContent(reComment.getReContent())
@@ -186,5 +181,4 @@ public class ReCommentService {
         }
         return tokenProvider.getMemberFromAuthentication();
     }
-
 }

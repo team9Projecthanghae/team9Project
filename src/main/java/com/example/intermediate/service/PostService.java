@@ -30,7 +30,6 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
-
   private final TokenProvider tokenProvider;
   private final CommentLikeRepository commentLikeRepository;
   private final FileRepository fileRepository;
@@ -90,9 +89,6 @@ public class PostService {
     for (Comment comment : commentList) {
       List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
       int likeCount = commentLikeList.size();
-      List<ReComment> recommentList = recommentRepository.findAllByComment(comment);
-
-
       List<ReComment> reCommentListTemp = reCommentRepository.findAllByComment(comment);
       List <ReCommentAllResponseDto> reCommentAllList =new ArrayList<>();
       for (ReComment value : reCommentListTemp) {

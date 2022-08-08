@@ -33,9 +33,6 @@ public class ReComment extends Timestamped {
     @Column(nullable = false)
     private String reContent;
 
-    public void update(ReCommentRequestDto recommentRequestDto ) {
-        this.reContent = recommentRequestDto.getReContent();
-    }
 
     public void update(ReCommentRequestDto reCommentRequestDto ) {
         this.reContent = reCommentRequestDto.getReContent();

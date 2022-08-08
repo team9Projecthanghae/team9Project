@@ -36,9 +36,6 @@ public class Comment extends Timestamped {
     @OneToMany(fetch = EAGER,mappedBy="comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReComment> reComments;
 
-  public void update(CommentRequestDto commentRequestDto) {
-    this.content = commentRequestDto.getContent();
-  }
     @Column(nullable = false)
     private String content;
 
