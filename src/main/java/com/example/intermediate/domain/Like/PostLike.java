@@ -19,6 +19,7 @@ public class PostLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_id"))
     private Member member;

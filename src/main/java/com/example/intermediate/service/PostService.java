@@ -124,7 +124,27 @@ public class PostService {
 
   @Transactional(readOnly = true)
   public ResponseDto<?> getAllPost() {
-    return ResponseDto.success(postRepository.findAllByOrderByModifiedAtDesc());
+    List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
+    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+
+    for (Post post :postList) {
+      String url = getImageUrlByPost(post);
+      List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
+      int likeCount= postLikeList.size();
+      postResponseDtoList.add(
+      PostResponseDto.builder()
+              .id(post.getId())
+              .title(post.getTitle())
+              .author(post.getMember().getNickname())
+              .content(post.getContent())
+              .createdAt(post.getCreatedAt())
+              .modifiedAt(post.getModifiedAt())
+              .likeCount(likeCount)
+              .imageUrl(url)
+              .build()
+      );
+    }
+    return ResponseDto.success(postResponseDtoList);
   }
 
   @Transactional
