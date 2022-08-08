@@ -11,8 +11,8 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReCommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

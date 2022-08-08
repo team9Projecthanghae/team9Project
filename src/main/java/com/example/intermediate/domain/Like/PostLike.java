@@ -5,15 +5,14 @@ import com.example.intermediate.domain.Post;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

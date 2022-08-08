@@ -26,7 +26,6 @@ public class Scheduler {
     // 초, 분, 시, 일, 월, 주 순서
     @Scheduled(cron = "*/10 * * * * *")
     public void deleteImages() throws InterruptedException {
-        List<File> fileList = fileRepository.findAll();
         ObjectListing imageList = amazonS3Client.listObjects(bucket);
         log.info(String.valueOf(imageList.getObjectSummaries()));
         System.out.println(imageList);
