@@ -96,6 +96,9 @@ public class PostService {
       for (ReComment value : reCommentListTemp) {
         Long reCommentId = value.getId();
         ReComment reComment = isPresentReComment(reCommentId);
+        if(reComment==null){
+          return ResponseDto.fail("RE_COMMENT_NOT_FOUND",
+                  "댓글이 존재하지 않습니다.");}
         int reLikeCount = reCommentLikeRepository.findByReComment(reComment).size();
         reCommentAllList.add(
                 ReCommentAllResponseDto.builder()

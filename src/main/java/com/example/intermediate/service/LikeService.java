@@ -61,6 +61,8 @@ public class LikeService {
         }
 
         Post post = isPresentPost(postId);
+       if (post==null){ return ResponseDto.fail("POST_NOT_FOUND", "게시글이 존재하지 않습니다.");
+       }
 
         Optional<PostLike> ByPostAndMember = postLikeRepository.findByPostAndMember(post, member);
 
@@ -140,6 +142,8 @@ public class LikeService {
         }
 
         Comment comment =isPresentComment(id);
+        if (comment==null){ return ResponseDto.fail("COMMENT_NOT_FOUND", "댓글이 존재하지 않습니다.");
+        }
 
         Optional<CommentLike> ByCommentAndMember = commentLikeRepository.findByCommentAndMember(comment, member);
         ByCommentAndMember.ifPresentOrElse(
@@ -176,7 +180,6 @@ public class LikeService {
         }
 
         Member member = validateMember(request);
-        log.info("2");
 
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
@@ -184,9 +187,8 @@ public class LikeService {
 
         ReComment reComment =isPresentReComment(id);
         if(reComment==null){
-        log.info("멍청아");}else{
-        log.info("마리아");}
-
+            return ResponseDto.fail("RE_COMMENT_NOT_FOUND",
+                    "댓글이 존재하지 않습니다.");}
 
         Optional<ReCommentLike> ByReCommentAndMember = reCommentLikeRepository.findByReCommentAndMember(reComment, member);
         ByReCommentAndMember.ifPresentOrElse(
