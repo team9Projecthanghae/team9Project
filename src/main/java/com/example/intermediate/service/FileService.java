@@ -28,7 +28,7 @@ public class FileService {
     private final FileRepository  fileRepository;
 
 
-    public ResponseDto<Object> upload(Long postId, MultipartFile file, HttpServletRequest request) throws IOException {
+    public ResponseDto<Object> upload(MultipartFile file, HttpServletRequest request) throws IOException {
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail("MEMBER_NOT_FOUND",
                     "로그인이 필요합니다.");
@@ -43,16 +43,9 @@ public class FileService {
         if (null == member) {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
-
-        Post post = postService.isPresentPost(postId);
-        if (null == post) {
-            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-        }
-
         String imageUrl = s3Uploader.uploadFiles(file,"static");
 
         File newFile = File.builder()
-                        .post(post)
                         .url(imageUrl)
                         .build();
         fileRepository.save(newFile);

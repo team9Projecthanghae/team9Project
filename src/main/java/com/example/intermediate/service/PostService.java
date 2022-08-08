@@ -63,6 +63,7 @@ public class PostService {
             .title(requestDto.getTitle())
             .content(requestDto.getContent())
             .member(member)
+            .imageUrl(requestDto.getImageUrl())
             .build();
     postRepository.save(post);
     return ResponseDto.success(
@@ -73,6 +74,7 @@ public class PostService {
                     .author(post.getMember().getNickname())
                     .createdAt(post.getCreatedAt())
                     .modifiedAt(post.getModifiedAt())
+                    .imageUrl(post.getImageUrl())
                     .build()
     );
   }
@@ -252,14 +254,7 @@ public class PostService {
   }
 
   public String getImageUrlByPost(Post post) {
-    String url;
-    Optional<File> file = fileRepository.findFileByPost(post);
-    if(file.isPresent()) {
-      url = file.get().getUrl();
-    } else {
-      url = "";
-    }
-    return url;
+    return post.getImageUrl();
   }
 
 

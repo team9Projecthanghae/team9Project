@@ -1,7 +1,6 @@
 package com.example.intermediate.service;
 
-import com.example.intermediate.controller.response.PostResponseDto;
-import com.example.intermediate.controller.response.ResponseDto;
+import com.example.intermediate.controller.response.*;
 import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
@@ -213,5 +212,47 @@ public class LikeService {
         log.info("뾰잉");
         Optional<ReComment> optionalReComment = reCommentRepository.findById(id);
         return optionalReComment.orElse(null);
+    }
+
+    @Transactional
+    public List<CommentAllResponseDto> getAllCommentLikesByMember(Member member){
+        List<CommentLike> commentLikeList = commentLikeRepository.findCommentLikesByMember(member);
+        List<CommentAllResponseDto> commentResponseDtoList = new ArrayList<>();
+        for(CommentLike commentLike : commentLikeList) {
+            List<CommentLike> commentLikeListByPost = commentLikeRepository.findByComment(commentLike.getComment());
+            int likeCount= commentLikeListByPost.size();
+            commentResponseDtoList.add(
+                    CommentAllResponseDto.builder()
+                            .author(commentLike.getComment().getMember().getNickname())
+                            .modifiedAt(commentLike.getComment().getModifiedAt())
+                            .createdAt(commentLike.getComment().getCreatedAt())
+                            .content(commentLike.getComment().getContent())
+                            .id(commentLike.getComment().getId())
+                            .likeCount(likeCount)
+                            .build()
+            );
+        }
+        return commentResponseDtoList;
+    }
+
+    @Transactional
+    public List<ReCommentAllResponseDto> getAllRecommentLikesByMember(Member member){
+        List<ReCommentLike> reCommentLikeList = reCommentLikeRepository.findReCommentLikesByMember(member);
+        List<ReCommentAllResponseDto> reCommentAllResponseDtoList = new ArrayList<>();
+        for(ReCommentLike reCommentLike : reCommentLikeList) {
+            List<ReCommentLike> postLikeListByPost = reCommentLikeRepository.findByReComment(reCommentLike.getReComment());
+            int likeCount= postLikeListByPost.size();
+            reCommentAllResponseDtoList.add(
+                    ReCommentAllResponseDto.builder()
+                            .author(reCommentLike.getReComment().getMember().getNickname())
+                            .modifiedAt(reCommentLike.getReComment().getModifiedAt())
+                            .createdAt(reCommentLike.getReComment().getCreatedAt())
+                            .reContent(reCommentLike.getReComment().getReContent())
+                            .id(reCommentLike.getReComment().getId())
+                            .reLikeCount(likeCount)
+                            .build()
+            );
+        }
+        return reCommentAllResponseDtoList;
     }
 }
