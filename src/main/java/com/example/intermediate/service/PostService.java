@@ -91,10 +91,14 @@ public class PostService {
       List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
       int likeCount = commentLikeList.size();
       List<ReComment> reCommentListTemp = reCommentRepository.findAllByComment(comment);
+      int reCommentCount = reCommentListTemp.size();
       List <ReCommentAllResponseDto> reCommentAllList =new ArrayList<>();
       for (ReComment value : reCommentListTemp) {
         Long reCommentId = value.getId();
         ReComment reComment = isPresentReComment(reCommentId);
+        if(reComment==null){
+          return ResponseDto.fail("RE_COMMENT_NOT_FOUND",
+                  "댓글이 존재하지 않습니다.");}
         int reLikeCount = reCommentLikeRepository.findByReComment(reComment).size();
         reCommentAllList.add(
                 ReCommentAllResponseDto.builder()
@@ -115,6 +119,7 @@ public class PostService {
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
                       .likeCount(likeCount)
+                      .reCommentCount(reCommentCount)
                       .reCommentResponseDtoList(reCommentAllList)
                       .build()
       );
@@ -123,6 +128,7 @@ public class PostService {
 
     List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
     int likeCount= postLikeList.size();
+    int commentCount = commentList.size();
 
     return ResponseDto.success(
             PostResponseDto.builder()
@@ -135,6 +141,7 @@ public class PostService {
                     .modifiedAt(post.getModifiedAt())
                     .imageUrl(url)
                     .likeCount(likeCount)
+                    .commentCount(commentCount)
                     .build()
     );
   }
