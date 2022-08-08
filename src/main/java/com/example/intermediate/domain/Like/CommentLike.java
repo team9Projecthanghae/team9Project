@@ -21,11 +21,11 @@ public class CommentLike {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name ="member_id"))
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "comment_id"))
+    @JoinColumn(name = "comment_id")
     private Comment comment;
 
     @Transactional
