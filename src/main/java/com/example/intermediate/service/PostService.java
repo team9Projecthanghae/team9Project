@@ -1,22 +1,18 @@
 package com.example.intermediate.service;
 
-
 import com.example.intermediate.controller.request.PostRequestDto;
-import com.example.intermediate.controller.response.CommentResponseDto;
-import com.example.intermediate.controller.response.PostResponseDto;
-import com.example.intermediate.controller.response.ResponseDto;
-import com.example.intermediate.domain.Comment;
-import com.example.intermediate.domain.File;
+import com.example.intermediate.controller.response.*;
+import com.example.intermediate.domain.*;
 import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
-import com.example.intermediate.domain.Member;
-import com.example.intermediate.domain.Post;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
 import com.example.intermediate.repository.FileRepository;
 import com.example.intermediate.repository.PostRepository;
+import com.example.intermediate.repository.ReCommentRepository;
 import com.example.intermediate.repository.like.CommentLikeRepository;
 import com.example.intermediate.repository.like.PostLikeRepository;
+import com.example.intermediate.repository.like.ReCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,7 +35,9 @@ public class PostService {
   private final CommentLikeRepository commentLikeRepository;
   private final FileRepository fileRepository;
 
+  private final ReCommentRepository reCommentRepository;
   private final PostLikeRepository postLikeRepository;
+  private  final ReCommentLikeRepository reCommentLikeRepository;
 
   @Transactional
   public ResponseDto<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
@@ -47,16 +45,19 @@ public class PostService {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
               "로그인이 필요합니다.");
     }
-
     if (null == request.getHeader("Authorization")) {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
               "로그인이 필요합니다.");
     }
-
     Member member = validateMember(request);
     if (null == member) {
       return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
     }
+    if(requestDto.getTitle()==null){return ResponseDto.fail("TITLE_EMPTY", "제목 칸이 비었습니다.");
+    }
+    if(requestDto.getContent()==null){return ResponseDto.fail("CONTENT_EMPTY", "작성된 글이 없습니다.");
+    }
+
 
     Post post = Post.builder()
             .title(requestDto.getTitle())
@@ -89,6 +90,23 @@ public class PostService {
     for (Comment comment : commentList) {
       List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
       int likeCount = commentLikeList.size();
+      List<ReComment> reCommentListTemp = reCommentRepository.findAllByComment(comment);
+      List <ReCommentAllResponseDto> reCommentAllList =new ArrayList<>();
+      for (ReComment value : reCommentListTemp) {
+        Long reCommentId = value.getId();
+        ReComment reComment = isPresentReComment(reCommentId);
+        int reLikeCount = reCommentLikeRepository.findByReComment(reComment).size();
+        reCommentAllList.add(
+                ReCommentAllResponseDto.builder()
+                        .id(reComment.getId())
+                        .author(reComment.getMember().getNickname())
+                        .reContent(reComment.getReContent())
+                        .createdAt(reComment.getCreatedAt())
+                        .modifiedAt(reComment.getModifiedAt())
+                        .reLikeCount(reLikeCount)
+                        .build()
+        );
+      }
       commentResponseDtoList.add(
               CommentResponseDto.builder()
                       .id(comment.getId())
@@ -97,12 +115,11 @@ public class PostService {
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
                       .likeCount(likeCount)
+                      .reCommentResponseDtoList(reCommentAllList)
                       .build()
       );
     }
-
     String url = getImageUrlByPost(post);
-
 
     List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
     int likeCount= postLikeList.size();
@@ -121,31 +138,35 @@ public class PostService {
                     .build()
     );
   }
+  @Transactional(readOnly = true)
+  public ReComment isPresentReComment(Long id) {
+    Optional<ReComment> optionalReComment =reCommentRepository.findById(id);
+    return optionalReComment.orElse(null);
+  }
 
   @Transactional(readOnly = true)
   public ResponseDto<?> getAllPost() {
+    List<PostAllResponseDto> postAllList= new ArrayList<>();
     List<Post> postList = postRepository.findAllByOrderByModifiedAtDesc();
-    List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-
-    for (Post post :postList) {
-      String url = getImageUrlByPost(post);
+    for (Post post : postList) {
       List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
-      int likeCount= postLikeList.size();
-      postResponseDtoList.add(
-      PostResponseDto.builder()
-              .id(post.getId())
-              .title(post.getTitle())
-              .author(post.getMember().getNickname())
-              .content(post.getContent())
-              .createdAt(post.getCreatedAt())
-              .modifiedAt(post.getModifiedAt())
-              .likeCount(likeCount)
-              .imageUrl(url)
-              .build()
+      int likeCount = postLikeList.size();
+      String url = getImageUrlByPost(post);
+      postAllList.add(
+              PostAllResponseDto.builder()
+                      .id(post.getId())
+                      .title(post.getTitle())
+                      .author(post.getMember().getNickname())
+                      .createdAt(post.getCreatedAt())
+                      .modifiedAt(post.getModifiedAt())
+                      .imageUrl(url)
+                      .likeCount(likeCount)
+                      .build()
       );
     }
-    return ResponseDto.success(postResponseDtoList);
+    return ResponseDto.success(postAllList);
   }
+
 
   @Transactional
   public ResponseDto<Post> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
@@ -231,7 +252,6 @@ public class PostService {
     }
     return url;
   }
-
 
 
   @Transactional(readOnly = true)

@@ -1,6 +1,5 @@
 package com.example.intermediate.service;
 
-
 import com.example.intermediate.controller.request.CommentRequestDto;
 import com.example.intermediate.controller.response.CommentResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
@@ -50,6 +49,8 @@ public class CommentService {
         Post post = postService.isPresentPost(requestDto.getPostId());
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
+        }
+        if(requestDto.getContent()==null){return ResponseDto.fail("CONTENT_EMPTY", "작성된 댓글이 없습니다.");
         }
 
         Comment comment = Comment.builder()
@@ -202,6 +203,7 @@ public class CommentService {
               .content(comment.getContent())
               .createdAt(comment.getCreatedAt())
               .modifiedAt(comment.getModifiedAt())
+//              .recomment(recomment.getRecomment())
               .likeCount(likeCount)
               .build()
       );

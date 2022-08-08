@@ -1,11 +1,10 @@
 package com.example.intermediate.domain.Like;
 
 import com.example.intermediate.domain.Member;
-import com.example.intermediate.domain.Post;
+import com.example.intermediate.domain.ReComment;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -14,28 +13,27 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostLike {
+public class ReCommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "re_comment_id")
+    private ReComment reComment;
+
 
     public void mappingMember(Member member) {
         this.member = member;
-        member.mappingPostLike(this);
+        member.mappingReCommentLike(this);
     }
 
-    public void mappingPost(Post post) {
-        this.post = post;
-        post.mappingPostLike(this);
+    public void mappingReCommentLike(ReComment reComment) {
+        this.reComment = reComment;
+        reComment.mappingReCommentLike(this);
     }
-
 }
