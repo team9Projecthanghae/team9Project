@@ -152,6 +152,7 @@ public class PostService {
       List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
       int likeCount = postLikeList.size();
       String url = getImageUrlByPost(post);
+      int commentCount = commentRepository.findAllByPost(post).size();
       postAllList.add(
               PostAllResponseDto.builder()
                       .id(post.getId())
@@ -161,6 +162,7 @@ public class PostService {
                       .modifiedAt(post.getModifiedAt())
                       .imageUrl(url)
                       .likeCount(likeCount)
+                      .commentCount(commentCount)
                       .build()
       );
     }

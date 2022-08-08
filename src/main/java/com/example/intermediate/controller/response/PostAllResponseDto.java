@@ -20,5 +20,6 @@ public class PostAllResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private int likeCount;
+    private int commentCount;
 }
 
