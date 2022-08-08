@@ -21,11 +21,6 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
-
     @Column
     private String url;
 }

@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface ReCommentLikeRepository  extends JpaRepository<ReCommentLike, Long> {
     Optional<ReCommentLike> findById(Long id);
     Optional<ReCommentLike> findByReCommentAndMember(ReComment recomment, Member member);
-
     List<ReCommentLike> findByReComment(ReComment reComment);
+
+    List<ReCommentLike> findReCommentLikesByMember(Member member);
 }

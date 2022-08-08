@@ -32,6 +32,9 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String content;
 
+  @Column(nullable = false)
+  private String imageUrl;
+
 
   @OneToMany(fetch = EAGER,mappedBy = "post",cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
@@ -39,10 +42,6 @@ public class Post extends Timestamped {
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = LAZY)
   private Member member;
-
-  @JsonIgnore
-  @OneToOne(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private File file;
 
   public void update(PostRequestDto postRequestDto) {
     this.title = postRequestDto.getTitle();
