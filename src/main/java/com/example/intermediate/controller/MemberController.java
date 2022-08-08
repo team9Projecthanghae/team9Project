@@ -40,6 +40,7 @@ public class MemberController {
   }
 
   @GetMapping("/api/auth/member/mypage")
+  @GetMapping(value = "/api/auth/member/mypage")
   public ResponseDto<?> getMyPage(HttpServletRequest request) {
     return memberService.getMemberActivityList(request);
   }

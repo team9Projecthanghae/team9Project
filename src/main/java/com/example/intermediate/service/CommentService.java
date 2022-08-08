@@ -50,6 +50,8 @@ public class CommentService {
         if (null == post) {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
+        if(requestDto.getContent()==null){return ResponseDto.fail("CONTENT_EMPTY", "작성된 댓글이 없습니다.");
+        }
 
         Comment comment = Comment.builder()
                 .member(member)

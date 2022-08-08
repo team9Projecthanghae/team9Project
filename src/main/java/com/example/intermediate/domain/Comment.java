@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Builder
@@ -20,41 +21,45 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 public class Comment extends Timestamped {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @JoinColumn(name = "member_id", nullable = false)
-  @ManyToOne(fetch = LAZY)
-  private Member member;
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = LAZY)
+    private Member member;
 
-  @JoinColumn(name = "post_id", nullable = false)
-  @ManyToOne(fetch = LAZY)
-  private Post post;
+    @JoinColumn(name = "post_id", nullable = false)
+    @ManyToOne(fetch = LAZY)
+    private Post post;
 
-  @Column(nullable = false)
-  private String content;
+    @OneToMany(fetch = EAGER,mappedBy="comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReComment> reComments;
 
   public void update(CommentRequestDto commentRequestDto) {
     this.content = commentRequestDto.getContent();
   }
+    @Column(nullable = false)
+    private String content;
 
-  public boolean validateMember(Member member) {
-    return !this.member.equals(member);
-  }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.REMOVE)
-    private List<CommentLike> commentLikeList = new ArrayList<>();
-
-
-    public void mappingCommentLike(CommentLike commentLike) {
-      this.commentLikeList.add(commentLike);
+    public void update(CommentRequestDto commentRequestDto) {
+        this.content = commentRequestDto.getContent();
     }
 
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
+    }
 
-  public void discountLike(CommentLike commentLike) {
-    this.commentLikeList.remove(commentLike);
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikeList = new ArrayList<>();
 
-  }
+    public void mappingCommentLike(CommentLike commentLike) {
+        this.commentLikeList.add(commentLike);
+    }
+
+    public void discountLike(CommentLike commentLike) {
+        this.commentLikeList.remove(commentLike);
+
+    }
 }
 

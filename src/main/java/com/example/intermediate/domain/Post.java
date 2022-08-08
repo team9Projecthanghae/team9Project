@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.List;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
-@Slf4j
 @Builder
 @Getter
 @NoArgsConstructor
@@ -34,15 +32,16 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String content;
 
-  @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+
+  @OneToMany(fetch = EAGER,mappedBy = "post",cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = LAZY)
   private Member member;
 
-  @OneToOne(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonIgnore
+  @OneToOne(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private File file;
 
   public void update(PostRequestDto postRequestDto) {
@@ -54,7 +53,8 @@ public class Post extends Timestamped {
     return !this.member.equals(member);
   }
 
-  @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.REMOVE)
+
+  @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.ALL)
   private List<PostLike> postLikeList = new ArrayList<>();
 
 

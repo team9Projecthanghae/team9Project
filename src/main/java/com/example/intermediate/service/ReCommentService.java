@@ -49,15 +49,15 @@ public class ReCommentService {
         if (null == comment) {
             return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
         }
+        if(requestDto.getReContent()==null){return ResponseDto.fail("CONTENT_EMPTY", "작성된 글이 없습니다.");
+        }
 
-        ReComment recomment = ReComment.builder()
+        ReComment reComment = ReComment.builder()
                 .member(member)
                 .comment(comment)
                 .reContent(requestDto.getReContent())
                 .build();
-
-
-        recommentRepository.save(recomment);
+        recommentRepository.save(reComment);
         return ResponseDto.success(
                 ReCommentResponseDto.builder()
                         .id(recomment.getId())
@@ -65,6 +65,11 @@ public class ReCommentService {
                         .reContent(recomment.getReContent())
                         .createdAt(recomment.getCreatedAt())
                         .modifiedAt(recomment.getModifiedAt())
+                        .id(reComment.getId())
+                        .author(reComment.getMember().getNickname())
+                        .reContent(reComment.getReContent())
+                        .createdAt(reComment.getCreatedAt())
+                        .modifiedAt(reComment.getModifiedAt())
                         .build()
         );
     }
@@ -110,8 +115,8 @@ public class ReCommentService {
             return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
         }
 
-//        Post post = postService.isPresentPost(requestDto.getPostId());
-//        if (null == post) {
+//        Comment comment = commentService.isPresentComment(requestDto.getCommentId());
+//        if (null == comment) {
 //            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
 //        }
 
@@ -181,4 +186,5 @@ public class ReCommentService {
         }
         return tokenProvider.getMemberFromAuthentication();
     }
+
 }
