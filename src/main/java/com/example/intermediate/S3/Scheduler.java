@@ -1,6 +1,7 @@
 package com.example.intermediate.S3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.example.intermediate.domain.File;
 import com.example.intermediate.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class Scheduler {
     @Scheduled(cron = "*/10 * * * * *")
     public void deleteImages() throws InterruptedException {
         List<File> fileList = fileRepository.findAll();
-        String imageList = amazonS3Client.getObjectAsString(bucket, "${cloud.aws.credentials.accessKey}");
-        log.info(imageList);
+        ObjectListing imageList = amazonS3Client.listObjects(bucket);
+        log.info(String.valueOf(imageList.getObjectSummaries()));
         System.out.println(imageList);
         log.info("바보");
         System.out.println("바보");
