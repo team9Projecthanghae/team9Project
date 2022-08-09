@@ -233,6 +233,7 @@ public class PostService {
       return ResponseDto.fail("BAD_REQUEST", "작성자만 삭제할 수 있습니다.");
     }
 
+    
     postRepository.delete(post);
     return ResponseDto.success("delete success");
   }
