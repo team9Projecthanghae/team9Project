@@ -57,28 +57,16 @@ public class Member extends Timestamped {
     }
 
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private Set<PostLike> postLikeList = new HashSet<>();
 
-    @Transactional
-    public void mappingPostLike(PostLike postLike) {
-        this.postLikeList.add(postLike);
-    }
 
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private Set<CommentLike> commentLikeList = new HashSet<>();
 
-    @Transactional
-    public void mappingCommentLike(CommentLike commentLike) {
-        this.commentLikeList.add(commentLike);
-    }
 
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)
     private Set<ReCommentLike> reCommentLikeList = new HashSet<>();
-
-    public void mappingReCommentLike(ReCommentLike reCommentLike) {
-        this.reCommentLikeList.add(reCommentLike);
-    }
 }
+
+

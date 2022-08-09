@@ -27,14 +27,6 @@ public class PostLike {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public void mappingMember(Member member) {
-        this.member = member;
-        member.mappingPostLike(this);
-    }
 
-    public void mappingPost(Post post) {
-        this.post = post;
-        post.mappingPostLike(this);
-    }
 
 }

@@ -35,7 +35,7 @@ public class Post extends Timestamped {
   private String imageUrl;
 
 
-  @OneToMany(fetch = EAGER,mappedBy = "post",cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(fetch = LAZY,mappedBy = "post",cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
 
   @JoinColumn(name = "member_id", nullable = false)
@@ -54,11 +54,6 @@ public class Post extends Timestamped {
 
   @OneToMany(fetch = LAZY, mappedBy = "post", cascade = CascadeType.ALL)
   private List<PostLike> postLikeList = new ArrayList<>();
-
-
-  public void mappingPostLike(PostLike postLike) {
-    this.postLikeList.add(postLike);
-  }
 
 
   public void discountLike(PostLike postLike) {

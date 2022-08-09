@@ -26,14 +26,4 @@ public class ReCommentLike {
     @JoinColumn(name = "re_comment_id")
     private ReComment reComment;
 
-
-    public void mappingMember(Member member) {
-        this.member = member;
-        member.mappingReCommentLike(this);
-    }
-
-    public void mappingReCommentLike(ReComment reComment) {
-        this.reComment = reComment;
-        reComment.mappingReCommentLike(this);
-    }
 }

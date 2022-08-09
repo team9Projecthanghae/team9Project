@@ -27,7 +27,11 @@ public class Scheduler {
     private final AmazonS3Client amazonS3Client;
 
     // 초, 분, 시, 일, 월, 주 순서
+<<<<<<< HEAD
     @Scheduled(cron = "0 0 3 * * *")
+=======
+    @Scheduled(cron = "0 */5 * * * *")
+>>>>>>> 9ecceaaa2f7f642f261261101be37778e72fd8d2
     public void deleteImages() {
         System.out.println("****************************************************************");
         System.out.println("사진 정리를 시작합니다");
@@ -39,19 +43,30 @@ public class Scheduler {
             for(Post post:postsList){
                 if(Objects.equals(s3ObjectSummaries.getKey(), post.getImageUrl())){
                     used+=1;
+<<<<<<< HEAD
                     System.out.println(post.getImageUrl().substring(56)+"는 사용되고 있습니다");
+=======
+                    System.out.println(post.getImageUrl().substring(56));
+                    System.out.println(s3ObjectSummaries.getKey());
+>>>>>>> 9ecceaaa2f7f642f261261101be37778e72fd8d2
                 }
             }
             if (used<1){
                 System.out.println("***************warning************");
                 System.out.println(s3ObjectSummaries.getKey());
+<<<<<<< HEAD
                 System.out.println("사진이 삭제됩니다.");
                 amazonS3Client.deleteObject(bucket,s3ObjectSummaries.getKey());
                 System.out.println("삭제 완료.");
+=======
+                System.out.println("사진이 삭제되었습니다");
+//                amazonS3Client.deleteObject(bucket,s3ObjectSummaries.getKey());
+>>>>>>> 9ecceaaa2f7f642f261261101be37778e72fd8d2
             }
         }
         System.out.println("사진 정리를 종료합니다");
         System.out.println("****************************************************************");
+<<<<<<< HEAD
     }
 
     @Scheduled(cron = "0 0 13 * * *")
@@ -68,5 +83,7 @@ public class Scheduler {
         }
         System.out.println("많은 관심 부탁드립니다.");
         System.out.println("****************************************************************");
+=======
+>>>>>>> 9ecceaaa2f7f642f261261101be37778e72fd8d2
     }
 }

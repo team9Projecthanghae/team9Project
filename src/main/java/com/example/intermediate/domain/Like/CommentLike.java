@@ -28,16 +28,5 @@ public class CommentLike {
     @JoinColumn(name = "comments_id")
     private Comment comment;
 
-    @Transactional
-    public void mappingMember(Member member) {
-        this.member = member;
-        member.mappingCommentLike(this);
-    }
-
-    @Transactional
-    public void mappingComment(Comment comment) {
-        this.comment = comment;
-        comment.mappingCommentLike(this);
-    }
 
 }
