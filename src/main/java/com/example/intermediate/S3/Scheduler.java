@@ -3,9 +3,7 @@ package com.example.intermediate.S3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.example.intermediate.domain.File;
 import com.example.intermediate.domain.Post;
-import com.example.intermediate.repository.FileRepository;
 import com.example.intermediate.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +27,7 @@ public class Scheduler {
     private final AmazonS3Client amazonS3Client;
 
     // 초, 분, 시, 일, 월, 주 순서
-    @Scheduled(cron = "0 0 1 * * *")
+    @Scheduled(cron = "0 0 3 * * *")
     public void deleteImages() {
         System.out.println("****************************************************************");
         System.out.println("사진 정리를 시작합니다");
@@ -47,8 +45,9 @@ public class Scheduler {
             if (used<1){
                 System.out.println("***************warning************");
                 System.out.println(s3ObjectSummaries.getKey());
-                System.out.println("사진이 삭제되었습니다");
-//                amazonS3Client.deleteObject(bucket,s3ObjectSummaries.getKey());
+                System.out.println("사진이 삭제됩니다.");
+                amazonS3Client.deleteObject(bucket,s3ObjectSummaries.getKey());
+                System.out.println("삭제 완료.");
             }
         }
         System.out.println("사진 정리를 종료합니다");
