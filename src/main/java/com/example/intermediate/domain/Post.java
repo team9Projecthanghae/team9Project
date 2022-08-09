@@ -2,7 +2,6 @@ package com.example.intermediate.domain;
 
 import com.example.intermediate.controller.request.PostRequestDto;
 import com.example.intermediate.domain.Like.PostLike;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +31,9 @@ public class Post extends Timestamped {
   @Column(nullable = false)
   private String content;
 
+  @Column(nullable = false)
+  private String imageUrl;
+
 
   @OneToMany(fetch = EAGER,mappedBy = "post",cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Comment> comments;
@@ -39,10 +41,6 @@ public class Post extends Timestamped {
   @JoinColumn(name = "member_id", nullable = false)
   @ManyToOne(fetch = LAZY)
   private Member member;
-
-  @JsonIgnore
-  @OneToOne(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private File file;
 
   public void update(PostRequestDto postRequestDto) {
     this.title = postRequestDto.getTitle();

@@ -16,10 +16,10 @@ public class FileController {
     private final String string = "/api/auth/image";
 
     @PostMapping(string)
-    public ResponseDto<?> upload(@RequestPart("postId") Long postId, @RequestPart("file") MultipartFile file,
+    public ResponseDto<?> upload(@RequestPart("file") MultipartFile file,
                                  HttpServletRequest request
     ) throws IOException {
-        return fileService.upload(postId,file,request);
+        return fileService.upload(file,request);
     }
 
 }

@@ -5,7 +5,6 @@ import com.example.intermediate.domain.Post;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -18,6 +17,7 @@ public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")

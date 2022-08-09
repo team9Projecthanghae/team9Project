@@ -32,7 +32,6 @@ public class PostService {
   private final CommentRepository commentRepository;
   private final TokenProvider tokenProvider;
   private final CommentLikeRepository commentLikeRepository;
-  private final FileRepository fileRepository;
 
   private final ReCommentRepository reCommentRepository;
   private final PostLikeRepository postLikeRepository;
@@ -62,6 +61,7 @@ public class PostService {
             .title(requestDto.getTitle())
             .content(requestDto.getContent())
             .member(member)
+            .imageUrl(requestDto.getImageUrl())
             .build();
     postRepository.save(post);
     return ResponseDto.success(
@@ -72,6 +72,7 @@ public class PostService {
                     .author(post.getMember().getNickname())
                     .createdAt(post.getCreatedAt())
                     .modifiedAt(post.getModifiedAt())
+                    .imageUrl(post.getImageUrl())
                     .build()
     );
   }
@@ -90,10 +91,14 @@ public class PostService {
       List<CommentLike> commentLikeList = commentLikeRepository.findByComment(comment);
       int likeCount = commentLikeList.size();
       List<ReComment> reCommentListTemp = reCommentRepository.findAllByComment(comment);
+      int reCommentCount = reCommentListTemp.size();
       List <ReCommentAllResponseDto> reCommentAllList =new ArrayList<>();
       for (ReComment value : reCommentListTemp) {
         Long reCommentId = value.getId();
         ReComment reComment = isPresentReComment(reCommentId);
+        if(reComment==null){
+          return ResponseDto.fail("RE_COMMENT_NOT_FOUND",
+                  "댓글이 존재하지 않습니다.");}
         int reLikeCount = reCommentLikeRepository.findByReComment(reComment).size();
         reCommentAllList.add(
                 ReCommentAllResponseDto.builder()
@@ -114,6 +119,7 @@ public class PostService {
                       .createdAt(comment.getCreatedAt())
                       .modifiedAt(comment.getModifiedAt())
                       .likeCount(likeCount)
+                      .reCommentCount(reCommentCount)
                       .reCommentResponseDtoList(reCommentAllList)
                       .build()
       );
@@ -122,6 +128,7 @@ public class PostService {
 
     List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
     int likeCount= postLikeList.size();
+    int commentCount = commentList.size();
 
     return ResponseDto.success(
             PostResponseDto.builder()
@@ -134,6 +141,7 @@ public class PostService {
                     .modifiedAt(post.getModifiedAt())
                     .imageUrl(url)
                     .likeCount(likeCount)
+                    .commentCount(commentCount)
                     .build()
     );
   }
@@ -151,6 +159,7 @@ public class PostService {
       List<PostLike> postLikeList = postLikeRepository.findAllByPost(post);
       int likeCount = postLikeList.size();
       String url = getImageUrlByPost(post);
+      int commentCount = commentRepository.findAllByPost(post).size();
       postAllList.add(
               PostAllResponseDto.builder()
                       .id(post.getId())
@@ -160,6 +169,7 @@ public class PostService {
                       .modifiedAt(post.getModifiedAt())
                       .imageUrl(url)
                       .likeCount(likeCount)
+                      .commentCount(commentCount)
                       .build()
       );
     }
@@ -242,14 +252,7 @@ public class PostService {
   }
 
   public String getImageUrlByPost(Post post) {
-    String url;
-    Optional<File> file = fileRepository.findFileByPost(post);
-    if(file.isPresent()) {
-      url = file.get().getUrl();
-    } else {
-      url = "";
-    }
-    return url;
+    return post.getImageUrl();
   }
 
 

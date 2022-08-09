@@ -34,6 +34,8 @@ public class MemberService {
 
   private final LikeService likeService;
 
+  private final ReCommentService reCommentService;
+
   @Transactional
   public ResponseDto<?> createMember(MemberRequestDto requestDto) {
     if (null != isPresentMember(requestDto.getNickname())) {
@@ -136,13 +138,19 @@ public class MemberService {
       return ResponseDto.fail("MEMBER_NOT_FOUND",
               "사용자를 찾을 수 없습니다.");
     }
-    List<PostResponseDto> responseDtoList = postService.getAllPostByMember(member);
+    List<PostResponseDto> postResponseDtoList = postService.getAllPostByMember(member);
     List<CommentResponseDto> commentResponseDtoList = commentService.getAllCommentsByMember(member);
-    List<PostResponseDto> postResponseDtoList = likeService.getAllPostLikesByMember(member);
+    List<ReCommentAllResponseDto> reCommentResponseDtoList = reCommentService.getAllReCommentsByMember(member);
+    List<PostResponseDto> postLikeResponseDtoList = likeService.getAllPostLikesByMember(member);
+    List<CommentAllResponseDto> commentLikeResponseDtoList = likeService.getAllCommentLikesByMember(member);
+    List<ReCommentAllResponseDto> reCommentAllResponseDtoList = likeService.getAllRecommentLikesByMember(member);
     return ResponseDto.success(MyPageReponseDto.builder()
-                    .postLikeResponseDtoList(postResponseDtoList)
-                    .postResponseDtoList(responseDtoList)
+                    .postLikeResponseDtoList(postLikeResponseDtoList)
+                    .postResponseDtoList(postResponseDtoList)
                     .commentResponseDtoList(commentResponseDtoList)
+                    .reCommentAllResponseDtoList(reCommentResponseDtoList)
+                    .commentLikeAllResponseDtoList(commentLikeResponseDtoList)
+                    .reCommentLikeAllResponseDtoList(reCommentAllResponseDtoList)
                     .build());
   }
 

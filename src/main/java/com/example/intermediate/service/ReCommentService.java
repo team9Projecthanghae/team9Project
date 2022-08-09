@@ -2,13 +2,16 @@ package com.example.intermediate.service;
 
 
 import com.example.intermediate.controller.request.ReCommentRequestDto;
+import com.example.intermediate.controller.response.ReCommentAllResponseDto;
 import com.example.intermediate.controller.response.ReCommentResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
+import com.example.intermediate.domain.Like.ReCommentLike;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.ReComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.ReCommentRepository;
+import com.example.intermediate.repository.like.ReCommentLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,8 @@ public class ReCommentService {
     private final TokenProvider tokenProvider;
 
     private final CommentService commentservice;
+
+    private final ReCommentLikeRepository reCommentLikeRepository;
 
     @Transactional
     public ResponseDto<?> createReComment(ReCommentRequestDto requestDto, HttpServletRequest request) {
@@ -180,5 +185,27 @@ public class ReCommentService {
             return null;
         }
         return tokenProvider.getMemberFromAuthentication();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReCommentAllResponseDto> getAllReCommentsByMember(Member member) {
+        List<ReComment> reCommentList = recommentRepository.findAllByMember(member);
+        List<ReCommentAllResponseDto> reCommentResponseDtoList = new ArrayList<>();
+
+        for(ReComment reComment : reCommentList) {
+            List<ReCommentLike> reCommentLikes = reCommentLikeRepository.findByReComment(reComment);
+            int likeCount= reCommentLikes.size();
+            reCommentResponseDtoList.add(
+                    ReCommentAllResponseDto.builder()
+                            .id(reComment.getId())
+                            .author(reComment.getMember().getNickname())
+                            .reContent(reComment.getReContent())
+                            .createdAt(reComment.getCreatedAt())
+                            .modifiedAt(reComment.getModifiedAt())
+                            .reLikeCount(likeCount)
+                            .build()
+            );
+        }
+        return reCommentResponseDtoList;
     }
 }
