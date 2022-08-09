@@ -2,15 +2,12 @@ package com.example.intermediate.service;
 
 
 import com.example.intermediate.controller.request.ReCommentRequestDto;
-import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.controller.response.ReCommentAllResponseDto;
 import com.example.intermediate.controller.response.ReCommentResponseDto;
 import com.example.intermediate.controller.response.ResponseDto;
 import com.example.intermediate.domain.Comment;
-import com.example.intermediate.domain.Like.PostLike;
 import com.example.intermediate.domain.Like.ReCommentLike;
 import com.example.intermediate.domain.Member;
-import com.example.intermediate.domain.Post;
 import com.example.intermediate.domain.ReComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.ReCommentRepository;
