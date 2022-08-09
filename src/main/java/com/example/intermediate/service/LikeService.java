@@ -73,11 +73,10 @@ public class LikeService {
                 },
                 // 좋아요가 없을 경우 좋아요 추가
                 () -> {
-                    PostLike postLike = PostLike.builder().build();
-
-                    postLike.mappingPost(post);
-                    postLike.mappingMember(member);
-
+                    PostLike postLike = PostLike.builder()
+                            .post(post)
+                            .member(member)
+                            .build();
                     postLikeRepository.save(postLike);
                 });
         return ResponseDto.success(true);
@@ -151,9 +150,10 @@ public class LikeService {
                     comment.discountLike(commentLike);
                 },
                 () ->{
-                    CommentLike commentLike = CommentLike.builder().build();
-                    commentLike.mappingComment(comment);
-                    commentLike.mappingMember(member);
+                    CommentLike commentLike = CommentLike.builder()
+                            .comment(comment)
+                            .member(member)
+                            .build();
 
                     commentLikeRepository.save(commentLike);
                 }
@@ -198,9 +198,10 @@ public class LikeService {
                     },
 
                     () ->{
-                    ReCommentLike reCommentLike = ReCommentLike.builder().build();
-                    reCommentLike.mappingReCommentLike(reComment);
-                    reCommentLike.mappingMember(member);
+                    ReCommentLike reCommentLike = ReCommentLike.builder()
+                            .member(member)
+                            .reComment(reComment)
+                            .build();
                     reCommentLikeRepository.save(reCommentLike);
                         log.info("4");
                     }
