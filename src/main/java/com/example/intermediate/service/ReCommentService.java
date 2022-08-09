@@ -81,11 +81,11 @@ public class ReCommentService {
             return ResponseDto.fail("NOT_FOUND", "일치하지 않은 id 입니다.");
         }
 
-        List<ReComment> recommentList = recommentRepository.findAllByComment(comment);
-        List<ReCommentResponseDto> recommentResponseDtoList = new ArrayList<>();
+        List<ReComment> reCommentList = recommentRepository.findAllByComment(comment);
+        List<ReCommentResponseDto> reCommentResponseDtoList = new ArrayList<>();
 
-        for (ReComment recomment : recommentList) {
-            recommentResponseDtoList.add(
+        for (ReComment recomment : reCommentList) {
+            reCommentResponseDtoList.add(
                     ReCommentResponseDto.builder()
                             .id(recomment.getId())
                             .author(recomment.getMember().getNickname())
@@ -95,7 +95,7 @@ public class ReCommentService {
                             .build()
             );
         }
-        return ResponseDto.success(recommentResponseDtoList);
+        return ResponseDto.success(reCommentResponseDtoList);
     }
 
     @Transactional
