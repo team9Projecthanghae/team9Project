@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,20 +29,19 @@ public class Scheduler {
     private final AmazonS3Client amazonS3Client;
 
     // 초, 분, 시, 일, 월, 주 순서
-    @Scheduled(cron = "0 */1 * * * *")
+    @Scheduled(cron = "0 0 1 * * *")
     public void deleteImages() {
         System.out.println("****************************************************************");
         System.out.println("사진 정리를 시작합니다");
-        List<Post>postList =postRepository.findAll();
+        List<Post>postsList =postRepository.findAll();
         ObjectListing uploadedImageList = amazonS3Client.listObjects(bucket);
         List<S3ObjectSummary> imageList=uploadedImageList.getObjectSummaries();
         for(S3ObjectSummary s3ObjectSummaries:imageList){
             int used=0;
-            for(Post post:postList){
-                if(Objects.equals(s3ObjectSummaries.getKey(), post.getImageUrl().substring(56))){
+            for(Post post:postsList){
+                if(Objects.equals(s3ObjectSummaries.getKey(), post.getImageUrl())){
                     used+=1;
-                    System.out.println(post.getImageUrl().substring(56));
-                    System.out.println(s3ObjectSummaries.getKey());
+                    System.out.println(post.getImageUrl().substring(56)+"는 사용되고 있습니다");
                 }
             }
             if (used<1){
@@ -52,6 +52,22 @@ public class Scheduler {
             }
         }
         System.out.println("사진 정리를 종료합니다");
+        System.out.println("****************************************************************");
+    }
+
+    @Scheduled(cron = "0 0 13 * * *")
+    @Transactional
+    public void advertisePostsWithNoComment() {
+        System.out.println("****************************************************************");
+        System.out.println("게시글 홍보를 시작합니다");
+        List<Post> postList =postRepository.findAll();
+        for (Post post : postList) {
+            if (post.getComments().size()<1) {
+                System.out.println(post.getMember().getNickname() + "님이 작성한 " + post.getTitle() + "에 첫 댓글을 달아주세요!");
+                System.out.println( "      *      *       *       *        *         *         ");
+            }
+        }
+        System.out.println("많은 관심 부탁드립니다.");
         System.out.println("****************************************************************");
     }
 }
