@@ -5,7 +5,6 @@ import com.example.intermediate.domain.Post;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 import static javax.persistence.FetchType.LAZY;
 

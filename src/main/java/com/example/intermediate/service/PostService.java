@@ -33,7 +33,6 @@ public class PostService {
 
   private final TokenProvider tokenProvider;
   private final CommentLikeRepository commentLikeRepository;
-  private final FileRepository fileRepository;
 
   private final ReCommentRepository reCommentRepository;
   private final PostLikeRepository postLikeRepository;

@@ -1,6 +1,5 @@
 package com.example.intermediate.repository;
 
-import com.example.intermediate.controller.response.PostResponseDto;
 import com.example.intermediate.domain.Member;
 import com.example.intermediate.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
