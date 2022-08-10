@@ -28,26 +28,33 @@ public class Scheduler {
 
     // 초, 분, 시, 일, 월, 주 순서
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 0 1 * * *")
+    @Transactional
     public void deleteImages() {
-        System.out.println("****************************************************************");
-        System.out.println("사진 정리를 시작합니다");
-        List<Post> postsList = postRepository.findAll();
+        log.info("****************************************************************");
+        log.info("사진 정리를 시작합니다");
+        List<Post>postsList =postRepository.findAll();
         ObjectListing uploadedImageList = amazonS3Client.listObjects(bucket);
-        List<S3ObjectSummary> imageList = uploadedImageList.getObjectSummaries();
-        for (S3ObjectSummary s3ObjectSummaries : imageList) {
-            int used = 0;
-            for (Post post : postsList) {
-                if (Objects.equals(s3ObjectSummaries.getKey(), post.getImageUrl())) {
-                    used += 1;
+        List<S3ObjectSummary> imageList=uploadedImageList.getObjectSummaries();
+        String BASE_URL = "https://hyeonseo-bucket.s3.ap-northeast-2.amazonaws.com/";
+        for(S3ObjectSummary s3ObjectSummaries:imageList){
+            int used=0;
+            for(Post post:postsList){
+                if(post.getImageUrl().equals(BASE_URL + s3ObjectSummaries.getKey())){
+                    used+=1;
+                    log.info("돌았단다 허허");
                 }
             }
-            if (used < 1) {
-                amazonS3Client.deleteObject(bucket, s3ObjectSummaries.getKey());
-                System.out.println("삭제 완료.");
-                System.out.println("사진이 삭제되었습니다");
+            if (used<1){
+                log.info("***************warning************");
+                log.info(s3ObjectSummaries.getKey());
+                log.info("사진이 삭제되었습니다");
+                fileRepository.deleteByUrl(BASE_URL + s3ObjectSummaries.getKey());
+                amazonS3Client.deleteObject(bucket,s3ObjectSummaries.getKey());
             }
         }
+        log.info("사진 정리를 종료합니다");
+        log.info("****************************************************************");
     }
 
     @Scheduled(cron = "0 0 13 * * *")
@@ -62,7 +69,6 @@ public class Scheduler {
                 System.out.println("      *      *       *       *        *         *         ");
             }
         }
-        System.out.println("많은 관심 부탁드립니다.");
         System.out.println("****************************************************************");
     }
 }
