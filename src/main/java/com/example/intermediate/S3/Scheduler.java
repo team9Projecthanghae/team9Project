@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.intermediate.domain.Post;
+import com.example.intermediate.repository.FileRepository;
 import com.example.intermediate.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @PropertySource("classpath:application-s3.properties")
 @Slf4j
@@ -24,6 +24,7 @@ public class Scheduler {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final PostRepository postRepository;
+    private final FileRepository fileRepository;
     private final AmazonS3Client amazonS3Client;
 
     // 초, 분, 시, 일, 월, 주 순서
