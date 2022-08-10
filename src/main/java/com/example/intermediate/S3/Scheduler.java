@@ -58,15 +58,15 @@ public class Scheduler {
         log.info("****************************************************************");
     }
 
-    @Scheduled(cron = "0 0 13 * * *")
+    @Scheduled(cron = "0 0 0 5 * *")
     @Transactional
     public void advertisePostsWithNoComment() {
         System.out.println("****************************************************************");
-        System.out.println("게시글 홍보를 시작합니다");
+        System.out.println("댓글 없는 게시글 삭제를 시작합니다");
         List<Post> postList = postRepository.findAll();
         for (Post post : postList) {
             if (post.getComments().size() < 1) {
-                System.out.println(post.getMember().getNickname() + "님이 작성한 " + post.getTitle() + "에 첫 댓글을 달아주세요!");
+                postRepository.deleteById(post.getId());
                 System.out.println("      *      *       *       *        *         *         ");
             }
         }
