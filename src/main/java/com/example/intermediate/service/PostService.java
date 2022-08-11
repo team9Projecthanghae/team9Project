@@ -2,12 +2,14 @@ package com.example.intermediate.service;
 
 import com.example.intermediate.controller.request.PostRequestDto;
 import com.example.intermediate.controller.response.*;
-import com.example.intermediate.domain.*;
+import com.example.intermediate.domain.Comment;
 import com.example.intermediate.domain.Like.CommentLike;
 import com.example.intermediate.domain.Like.PostLike;
+import com.example.intermediate.domain.Member;
+import com.example.intermediate.domain.Post;
+import com.example.intermediate.domain.ReComment;
 import com.example.intermediate.jwt.TokenProvider;
 import com.example.intermediate.repository.CommentRepository;
-import com.example.intermediate.repository.FileRepository;
 import com.example.intermediate.repository.PostRepository;
 import com.example.intermediate.repository.ReCommentRepository;
 import com.example.intermediate.repository.like.CommentLikeRepository;
@@ -55,7 +57,6 @@ public class PostService {
     }
     if(requestDto.getContent()==null){return ResponseDto.fail("CONTENT_EMPTY", "작성된 글이 없습니다.");
     }
-
 
     Post post = Post.builder()
             .title(requestDto.getTitle())
